@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/stauth.css' %}">
+</head>
+<body>
+    <div class="container">
+        <form action="" method="post" novalidate class="shadow">
+                    <h2>Login</h2>
+                    {% csrf_token %}
+                    {% for fm in form %}
+                    {{fm.label_tag}} {{fm}} <small class="text-danger">{{fm.errors|striptags}}</small> <br>
+                    {% endfor %}
+                   
+                    <input type="submit" value="Login" class="submit">
+                    <small><a href="http://127.0.0.1:8000/password-reset/"
+                        class="text-danger">Foget Password ?</a>
+                    </small> 
+                    <div class="text-primary">
+                        <small>New User ? <a href="http://127.0.0.1:8000/registration/"
+                            class="text-danger">Register</a>
+                        </small>                         
+                    </div>
+
+                    {% if form.non_field_errors %}
+                        {% for error in form.non_field_errors %}
+                             <p class="alert">{{error}}</p>
+                        {% endfor %}
+                    {% endif %}           
+                    {% for message in messages %}
+                          <div class="message {{ message.tags }}">
+                                  {{ message }}
+                          </div>
+                    {% endfor %}
+        </form>
+    </div>
+    {{ redirect_to_login_immediately }}
+
+</body>
+</html>

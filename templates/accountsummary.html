@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account</title>
+    <link rel="stylesheet" href="{% static 'css/staccsummary.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="cont left">
+            <h2>My Account</h2>
+            <h3>Account Summary</h3>
+            <h2>Tasks</h2>
+            <a href="#">Submit new task</a>
+            <a href="#">Finished task</a>
+            <a href="#">Task error</a>
+            <h2>Account Options</h2>
+            <a href="http://127.0.0.1:8000/passwordchange/">Change Password</a>
+            <a href="http://127.0.0.1:8000/logout/">Logout</a>
+        </div>
+        <div class="cont right">
+            <h1>My Account Summary</h1>
+            <h2>Task overview</h2>
+            <h3>Submited tasks</h3>
+            <input value="{{id.submit}}" disabled>
+            <h3>Finished tasks</h3>
+            <input value="{{id.finish}}" disabled> 
+            <h3>Errors</h3>
+            <input value="{{id.error}}" disabled>
+        </div>
+    </div>
+</body>
+</html>
