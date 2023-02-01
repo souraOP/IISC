@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <nav class="nav">
+        <img src="Pics/logo.png" alt="Bankist logo" class="nav__logo" id="logo" />
+        <ul class="nav__links">
+            <li class="nav__item">
+                <a class="nav__link" href="{% url 'documentation' %}">Documentation</a>
+            </li>
+            <li class="nav__item">
+                <a class="nav__link" href="{% url 'visualization' %}">Visualizations</a>
+            </li>
+            <li class="nav__item">
+                <a class="nav__link" href="{% url 'simulation' %}">Simulation</a>
+            </li>
+            <li class="nav__item">
+                <a class="nav__link" href="#section--4">Concepts</a>
+            </li>
+            <li class="nav__item">
+                <a class="nav__link" href="{% url 'about' %}">About</a>
+            </li>
+            <li class="nav__item">
+                <a class="nav__link" href="#">Login</a>
+            </li>
+            <li class="nav__item">
+                <a class="nav__link" href="https://github.com/DeepaMahm/differential_networks">Github</a>
+            </li>
+        </ul>
+    </nav>
+    
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        About
+    </title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{%static 'js/script.js'%}"></script>
+</head>
+
+<body>
+    <section class="section" id="section--5">
+        <div class="section__title">
+            <h1 class="section__description">About</h1>
+            <h1 class="section__header">
+
+            </h1>
+
+            <input type="text" id="mySearch" onkeyup="myFunction()" placeholder="Search up.." title="Type in a category">
+
+            <style>
+                /* Style The Dropdown Button */
+                
+                .dropbtn {
+                    background-color: #4CAF50;
+                    color: white;
+                    padding: 11px;
+                    font-size: 11px;
+                    border: none;
+                    cursor: pointer;
+                }
+                /* The container <div> - needed to position the dropdown content */
+                
+                .dropdown {
+                    position: relative;
+                    display: inline-block;
+                }
+                /* Dropdown Content (Hidden by Default) */
+                
+                .dropdown-content {
+                    display: none;
+                    position: absolute;
+                    background-color: #f9f9f9;
+                    min-width: 690px;
+                    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+                    z-index: 1;
+                    font-size: 19px;
+                }
+                /* Links inside the dropdown */
+                
+                .dropdown-content a {
+                    color: black;
+                    padding: 12px 16px;
+                    text-decoration: none;
+                    display: block;
+                }
+                /* Change color of dropdown links on hover */
+                
+                .dropdown-content a:hover {
+                    background-color: #f1f1f1
+                }
+                /* Show the dropdown menu on hover */
+                
+                .dropdown:hover .dropdown-content {
+                    display: block;
+                }
+                /* Change the background color of the dropdown button when the dropdown content is shown */
+                
+                .dropdown:hover .dropbtn {
+                    background-color: #3e8e41;
+                }
+            </style>
+            <div class="btn-group">
+                <button class="btn content" onclick="listView()"><br>Content </button>
+            </div>
+            <!-- <div class="dropdown">
+                <button class="dropbtn">More</button>
+                <div class="dropdown-content active">
+                    <a href="#">A simulator developed based on a discrete modeling framework for simulating gradient-driven advection–dispersion-reaction dynamics of multi species transport occuring in hierarchical networks found in biology.
+            </a>
+                </div>
+            </div> -->
+            <div class="btn body1">
+                <p>
+                    A simulator developed based on a discrete modeling framework for simulating gradient-driven advection -dispersion-reaction dynamics of multi species transport occuring in hierarchical networks found in biology.
+                </p>
+            </div>
+
+            <button class="btn people" onclick="listView()"><br>Development Team </button>
+            <div class="dropdown">
+                <button class="dropbtn">More</button>
+                <div class="dropdown-content">
+                    <style>
+                        a:link {
+                            color: green;
+                            background-color: transparent;
+                        }
+                        
+                        a:visited {
+                            color: green;
+                            background-color: transparent;
+                        }
+                        
+                        a:hover {
+                            color: blue;
+                            background-color: transparent;
+                        }
+                        
+                        a:active {
+                            color: blue;
+                            background-color: transparent;
+                        }
+                    </style>
+                    <p style="display:inline;">The project is developed by the Biomolecular Computation Laboratory<a href="http://pallab.serc.iisc.ernet.in/index.php">IISC</a> Deepa Mahesvare M. <a href="https://sites.google.com/view/deepamaheshvare/home">DEEPA</a>, Prof. Debnath
+                        Pal <a href="http://cds.iisc.ac.in/faculty/dpal/ ">D.PAL</a> and by the Scientific Computation Laboratory including Prof. Soumyendu Raha <a href="http://cds.iisc.ac.in/faculty/raha/ "><S class="RAHA"></S></a>at Department of Computational
+                        and Data Sciences <a href="https://cds.iisc.ac.in/ ">IISC</a>, Indian Institute of Science <a href="https://iisc.ac.in/ ">IISc-Bangalore</a>. The team of contributors include Subhraneel Haldar, Pranav, Rohit Chakraborty and Rohit
+                        Pandey at .. (inlcude cds <a href="https://cds.iisc.ac.in/wp-content/uploads/CDS_Logo_Square.png ">logo</a> , iisc <a href="https://www.theindianwire.com/wp-content/uploads/2018/12/IISc-Bangalore.jpg ">IISc-Bangalore</a>logo)
+                    </p>
+                </div>
+            </div>
+            <button class="btn referances" onclick="listView()"><br>Funding </button>
+            <div class="dropdown">
+                <button class="dropbtn">More</button>
+                <div class="dropdown-content">
+                    <p>The study is supported by intramural funds provided by the Ministry of Education, Government of India. Research of DM is supported by the Senior Research Fellowship from the Ministry of Human Resource Development (MHRD), Government
+                        of India.
+                    </p>
+                </div>
+            </div>
+            <button class="btn description" onclick="listView()"><br>Citing us </button>
+            <div class="dropdown">
+                <button class="dropbtn">More</button>
+                <div class="dropdown-content">
+                    <p>Please use the following article to cite this project: Deepa Maheshvare, M., Raha, S. and Pal, D., 2022. A graph-based framework for multiscale modeling of physiological transport. Frontiers in Network Physiology, p.18. DOI: https://doi.org/10.3389/fnetp.2021.802881
+                    </p>
+                </div>
+            </div>
+            <button class="btn description" onclick="listView()"><br>Contact us </button>
+            <div class="dropdown">
+                <button class="dropbtn">More</button>
+                <div class="dropdown-content">
+                    <p>We welcome any comments, questions, suggestions, contributions, or discussion about the project. You can also simply open an issue on our GitHub repo <a href="https://github.com/DeepaMahm/differential_networks">Github</a>with the tag
+                        "discussion". To privately contact us, you can send us an email at dpal@iisc.ac.in.
+
+                    </p>
+                </div>
+            </div>
+            <button class="btn statistics" onclick="listView()"><br>Version history </button>
+            <button class="btn referances" onclick="listView()"><br>References </button>
+
+          <!-- <div class="btn-group">
+                <button class="btn referances" onclick="listView()"><br>References                     </button>
+                <button class="btn people" onclick="listView()"><br>Development Team               </button>
+                <button class="btn content" onclick="listView()"><br>Content               </button>
+                <button class="btn statistics" onclick="listView()"><br>Version history                 </button>
+                <button class="btn description" onclick="listView()"><br>Citing us               </button>
+                <button class="btn description" onclick="listView()"><br>Contact us              </button>
+            </div>
+           --> 
+
+</body>
+
+</html>

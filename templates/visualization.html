@@ -1,0 +1,139 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <nav class="nav">
+        <img src="Pics/logo.png" alt="Bankist logo" class="nav__logo" id="logo" />
+        <ul class="nav__links">
+            <li class="nav__item">
+                <a class="nav__link" href="{% url 'documentation' %}">Documentation</a>
+            </li>
+            <li class="nav__item">
+                <a class="nav__link" href="{% url 'visualization' %}">Visualizations</a>
+            </li>
+            <li class="nav__item">
+                <a class="nav__link" href="{% url 'simulation' %}">Simulation</a>
+            </li>
+            <li class="nav__item">
+                <a class="nav__link" href="#section--4">Concepts</a>
+            </li>
+            <li class="nav__item">
+                <a class="nav__link" href="{% url 'about' %}">About</a>
+            </li>
+            <li class="nav__item">
+                <a class="nav__link" href="#">Login</a>
+            </li>
+            <li class="nav__item">
+                <a class="nav__link" href="https://github.com/DeepaMahm/differential_networks">Github</a>
+            </li>
+        </ul>
+    </nav>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        Visualization
+    </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/2.7.10/cytoscape.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js'></script>
+    <script src="{%static 'js/graphdata.js'%}"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{%static 'js/script.js'%}"></script>
+</head>
+<style>
+    #cy {
+        width: 900px;
+        height: 500px;
+        position: absolute;
+        nav-down: 5px;
+        nav-right: 5px;
+    }
+</style>
+<body>
+    <div id="cy"></div>
+    <script>
+        var cy = cytoscape({
+            elements: data,
+            container: document.getElementById("cy"),
+            style: [{
+                selector: "node",
+                style: {
+                    shape: "hexagon",
+                    "background-color": "red",
+                    label: "data(id)"
+                }
+            }],
+            layout: {
+                name: "grid"
+            }
+        });
+    </script>
+    <script src="{%static 'js/script.js'%}"></script>
+    <!--<section class="section" id="section--2">
+        <div class="section__title">
+            <h2 class="section__description">Visualizations</h2>
+            <h3 class="section__header">
+                Everything as simple as possible, but no simpler.
+            </h3>
+        </div>
+
+        <div class="operations">
+            <div class="operations__tab-container">
+                <button class="btn operations__tab operations__tab--1 operations__tab--active" data-tab="1">
+                    <span>01</span>Instant Transfers
+                </button>
+                <button class="btn operations__tab operations__tab--2" data-tab="2">
+                    <span>02</span>Instant Loans
+                </button>
+                <button class="btn operations__tab operations__tab--3" data-tab="3">
+                    <span>03</span>Instant Closing
+                </button>
+            </div>
+            <div class="operations__content operations__content--1 operations__content--active">
+                <div class="operations__icon operations__icon--1">
+                    <svg>
+                        <use xlink:href="img/icons.svg#icon-upload"></use>
+                    </svg>
+                </div>
+                <h5 class="operations__header">
+                    Tranfser money to anyone, instantly! No fees, no BS.
+                </h5>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </p>
+            </div>
+
+            <div class="operations__content operations__content--2">
+                <div class="operations__icon operations__icon--2">
+                    <svg>
+                        <use xlink:href="img/icons.svg#icon-home"></use>
+                    </svg>
+                </div>
+                <h5 class="operations__header">
+                    Buy a home or make your dreams come true, with instant loans.
+                </h5>
+                <p>
+                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+            </div>
+            <div class="operations__content operations__content--3">
+                <div class="operations__icon operations__icon--3">
+                    <svg>
+                        <use xlink:href="img/icons.svg#icon-user-x"></use>
+                    </svg>
+                </div>
+                <h5 class="operations__header">
+                    No longer need your account? No problem! Close it instantly.
+                </h5>
+                <p>
+                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </p>
+            </div>
+        </div>
+    </section>
+-->
+
+</body>
+
+</html>
