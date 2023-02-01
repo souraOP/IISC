@@ -51,7 +51,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    
+    'django_auto_logout.middleware.auto_logout', #auto logout
 ]
 
 ROOT_URLCONF = 'iisc.urls'
@@ -68,7 +68,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
-                 
+                'django_auto_logout.context_processors.auto_logout_client', #auto logout  
             ],
         },
     },
@@ -137,8 +137,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_POST = 587
-EMAIL_HOST_USER = 'simgraph.iisc@gmail.com'
-EMAIL_HOST_PASSWORD = 'ecojhhdzdounewvl'
+#EMAIL_HOST_USER = 'simgraph.iisc@gmail.com'
+#EMAIL_HOST_PASSWORD = 'ecojhhdzdounewvl'
+EMAIL_HOST_USER = 'pranavkumar97954@gmail.com'
+EMAIL_HOST_PASSWORD = 'psfukvcfalmvmoof'
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
+AUTO_LOGOUT = {
+    'IDLE_TIME': timedelta(minutes=10),
+    'SESSION_TIME': timedelta(minutes=50),
+    'MESSAGE': 'The session has expired. Please login again to continue.',
+    'REDIRECT_TO_LOGIN_IMMEDIATELY': True,
+}

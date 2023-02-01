@@ -20,6 +20,7 @@ def about(request):
 def documentation(request):
     return render(request,"documentation.html")
 
+@login_required(login_url='http://127.0.0.1:8000/login/')
 def simulation(request):
         return render(request,"simulation.html")
 
