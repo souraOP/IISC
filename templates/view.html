@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>result</title>
+</head>
+<style>
+    *{
+    margin: 20px;
+    padding: 0;
+    box-sizing: inherit;
+}
+body {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
+    color: rgb(7, 15, 237);
+    line-height: 1.9;
+    background-color: #f3f3f3;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #0d0c0c;
+  text-align: center;
+  padding: 8px;
+}
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+<body>
+    <h2 style="text-align: center;">Result Table</h2>
+    <table>
+      <thead>
+          <tr>
+              <th>S/N</th>
+              <th>FileName</th>
+              <th>Submit Date</th>
+              <th>Status</th>
+              <th>Download Link</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for d in data %}
+          <tr>
+              <td>{{forloop.counter}}</td>
+              <td>{{d.file_name}}</td>
+              <td>{{d.added_on}}</td>
+              <td>Finished</td>
+              <td><a download href="{{d.my_file.url}}">Result</a></td> 
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+</body>
+</html>

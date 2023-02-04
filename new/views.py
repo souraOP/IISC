@@ -1,14 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import render,HttpResponse
 
 
 #Authonication
 from django.views import View
-from .forms import RegisterForm
+from .forms import RegisterForm,MyfileUploadForm
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from iisc import settings
-
+from .models import file_upload
+from django.contrib.auth import views as User
+from django.contrib.auth.models import User
 # Create your views here.
 
 def home(request):
@@ -36,7 +38,7 @@ def summary(request):
             'submit': '10',
             'finish': '9',
             'error':'1'
-            }
+            } 
         return render(request,"accountsummary.html",{'id':mydict})
 
 class Register(View):
@@ -56,3 +58,36 @@ class Register(View):
         else:
             messages.warning(request,"Invalid Input Data")  
         return render(request,'authentication/Register.html',locals()) 
+
+@login_required(login_url='http://127.0.0.1:8000/login/')
+def add_file(request):
+    context={}
+    if request.method == 'POST':
+        form = MyfileUploadForm(request.POST,request.FILES)
+
+        if form.is_valid():
+            login_user=User.objects.get(username=request.user.username)
+            name = form.cleaned_data['file_name']
+            the_files = form.cleaned_data['files_data']
+            file_upload(uploader=login_user,file_name=name,my_file=the_files).save()
+            context["status"]="{}File Added Successfully"
+            currentuser = request.user
+            user_email = currentuser.email
+            mail_message = f'The task  finished successfully.'\
+                           f'You can view the results by visiting http://127.0.0.1:8000/result/{name}/'
+            send_mail('Your Result is Ready', mail_message, settings.EMAIL_HOST_USER, [user_email],fail_silently=False)
+            return render(request,"accountsummary.html",context)
+        else:
+            return HttpResponse("error")
+    else:
+        context = {
+            'form':MyfileUploadForm()
+        }
+        return render(request,"upload.html",context)
+
+def show_file(request):
+    all_data = file_upload.objects.filter(uploader__id=request.user.id)
+    context = {
+        'data':all_data
+    }
+    return render(request,'view.html',context)

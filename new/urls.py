@@ -14,7 +14,8 @@ urlpatterns =[
     path('visualization', views.visualization,name="visualization"),
     
     path('summary/', views.summary,name="summary"),
-
+    path('upload/',views.add_file,name="add_file"),
+    path('view/',views.show_file,name="view"),
     #login
     path('registration/',views.Register.as_view(),name = 'register'),
     path('login/',auth_view.LoginView.as_view(template_name='authentication/login.html',authentication_form=LoginForm) , name='login'),

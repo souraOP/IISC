@@ -14,8 +14,8 @@
             <h2>My Account</h2>
             <h3>Account Summary</h3>
             <h2>Tasks</h2>
-            <a href="#">Submit new task</a>
-            <a href="#">Finished task</a>
+            <a href="http://127.0.0.1:8000/upload/">Submit new task</a>
+            <a href="http://127.0.0.1:8000/view/">Finished task</a>
             <a href="#">Task error</a>
             <h2>Account Options</h2>
             <a href="http://127.0.0.1:8000/passwordchange/">Change Password</a>
@@ -34,3 +34,8 @@
     </div>
 </body>
 </html>
+{% if status%}
+   <script>
+    alert("{{status}}");
+   </script>
+{% endif %}
