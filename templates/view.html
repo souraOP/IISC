@@ -15,7 +15,7 @@
 body {
     font-family: 'Poppins', sans-serif;
     font-weight: 300;
-    color: rgb(7, 15, 237);
+    color: rgb(32, 32, 33);
     line-height: 1.9;
     background-color: #f3f3f3;
 }
@@ -41,10 +41,11 @@ tr:nth-child(even) {
       <thead>
           <tr>
               <th>S/N</th>
-              <th>FileName</th>
+              <th>Task Name</th>
               <th>Submit Date</th>
               <th>Status</th>
-              <th>Download Link</th>
+              <th>Input File Link</th>
+              <th>Result Download Link</th>
           </tr>
       </thead>
       <tbody>
@@ -54,6 +55,7 @@ tr:nth-child(even) {
               <td>{{d.file_name}}</td>
               <td>{{d.added_on}}</td>
               <td>Finished</td>
+              <td><a download href="{{d.my_file.url}}">Result</a></td>
               <td><a download href="{{d.my_file.url}}">Result</a></td> 
           </tr>
           {% endfor %}
