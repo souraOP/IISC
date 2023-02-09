@@ -76,9 +76,22 @@ background-color: rgb(146, 200, 244);
                 <label for="{{form.files.id_for_label}}">File Name</label>
                 {{form.files_data}}
             </div>
-            <button type="submit" class="submit">Submit</button>
+            <button type="submit" class="submit" onclick="checkExtension()">Submit</button>
         </form>
     </div>
+
+    <script>
+        function checkExtension() {
+          var fileInput = document.getElementById("{{ form.files_name.id_for_label }}");
+          var filePath = fileInput.value;
+          var allowedExtensions = /(\.json|\.xlsx)$/i;
+          if (!allowedExtensions.exec(filePath)) {
+            alert("Invalid Task file type. Please upload an Task file (json or xlsx).");
+            fileInput.value = "";
+            return false;
+          } 
+        }
+    </script>
 </body>
 </html>
 {% if status%}

@@ -11,6 +11,8 @@ from iisc import settings
 from .models import file_upload
 from django.contrib.auth import views as User
 from django.contrib.auth.models import User
+from django import forms
+from django.contrib.auth import logout
 # Create your views here.
 
 def home(request):
@@ -69,6 +71,10 @@ def add_file(request):
             login_user=User.objects.get(username=request.user.username)
             name = form.cleaned_data['file_name']
             the_files = form.cleaned_data['files_data']
+            file_extension = the_files.name.split(".")[-1].lower()
+            if file_extension not in ['xlsx', 'json']:
+                context["status"]="Invalid Task file type. Please upload an Task file (.xlsx or json)."
+                return render(request,"accountsummary.html",context)
             file_upload(uploader=login_user,file_name=name,my_file=the_files).save()
             context["status"]="{}File Added Successfully"
             #simulator(the_files)
@@ -77,7 +83,8 @@ def add_file(request):
             mail_message = f'The task  finished successfully.'\
                            f'You can view the results by visiting http://127.0.0.1:8000/view/'
             send_mail('Your Result is Ready', mail_message, settings.EMAIL_HOST_USER, [user_email],fail_silently=False)
-            return render(request,"accountsummary.html",context)
+            logout(request)
+            return render(request,"index.html",context)
         else:
             return HttpResponse("error")
     else:
@@ -85,7 +92,8 @@ def add_file(request):
             'form':MyfileUploadForm()
         }
         return render(request,"upload.html",context)
-
+        
+@login_required(login_url='http://127.0.0.1:8000/login/')
 def show_file(request):
     all_data = file_upload.objects.filter(uploader__id=request.user.id)
     context = {

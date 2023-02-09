@@ -69,5 +69,9 @@
 
     <script src="{%static 'js/script.js'%}"></script>
 </body>
-
+{% if status%}
+   <script>
+    alert("{{status}}");
+   </script>
+{% endif %}
 </html>
