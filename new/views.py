@@ -71,10 +71,11 @@ def add_file(request):
             the_files = form.cleaned_data['files_data']
             file_upload(uploader=login_user,file_name=name,my_file=the_files).save()
             context["status"]="{}File Added Successfully"
+            #simulator(the_files)
             currentuser = request.user
             user_email = currentuser.email
             mail_message = f'The task  finished successfully.'\
-                           f'You can view the results by visiting http://127.0.0.1:8000/result/{name}/'
+                           f'You can view the results by visiting http://127.0.0.1:8000/view/'
             send_mail('Your Result is Ready', mail_message, settings.EMAIL_HOST_USER, [user_email],fail_silently=False)
             return render(request,"accountsummary.html",context)
         else:
