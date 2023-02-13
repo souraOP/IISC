@@ -5,16 +5,16 @@
     color: #f0f2f8;
     font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Ubuntu,sans-serif;
     word-wrap: break-word;
+    
 }
 
 body {
 align-items: center;
-background-color: #fff;
+background-color: #a98ff8;
 display: flex;
 justify-content: center;
 height: 100vh;
 }
-
 .form-container {
     background-color: #f2f2f2;
     padding: 30px;
