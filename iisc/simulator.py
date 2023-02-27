@@ -16,14 +16,13 @@ from iisc import (
 # import subprocess
 # import sys
 
-def runsimulation():
+def runsimulation(input_files):
     # clear results dir
     try:
         os.remove(RESULTS_MAT)
         print("cleaning results directory")
     except OSError:
         pass
-
     start = time.time()
     os.chdir(SIMULATOR_DIR)
     print("running simulation ...")

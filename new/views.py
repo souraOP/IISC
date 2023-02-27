@@ -87,7 +87,7 @@ def add_file(request):
             file_upload(uploader=login_user,file_name=name,my_file=the_files).save()
             context["status"]="{}File Added Successfully"
             #simulator(the_files)
-            simulator.runsimulation()
+            simulator.runsimulation(the_files)
             currentuser = request.user
             user_email = currentuser.email
             mail_message = f'The task  finished successfully.'\
