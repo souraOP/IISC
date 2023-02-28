@@ -4,7 +4,8 @@ import time
 from iisc import (
     SIMULATOR_DIR,
     SIMULATOR,
-    RESULTS_MAT
+    RESULTS_MAT,
+    TASK_DIR
 )
 # import json
 # import networkx as nx
@@ -16,7 +17,8 @@ from iisc import (
 # import subprocess
 # import sys
 
-def runsimulation(input_files):
+
+def runsimulation():  #input_files
     # clear results dir
     try:
         os.remove(RESULTS_MAT)
@@ -26,10 +28,13 @@ def runsimulation(input_files):
     start = time.time()
     os.chdir(SIMULATOR_DIR)
     print("running simulation ...")
-    os.system(f'{SIMULATOR}')
+    os.system(f'{SIMULATOR} {TASK_DIR}')
     stop = time.time()
     print("simulation is complete \n Elapsed time: ", stop - start)
 
+
 if __name__ == '__main__':
     # G = create_graph(attributes=True, directed=True, sheet=test_case)
+    print(TASK_DIR)
+    # exit()
     runsimulation()
