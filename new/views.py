@@ -13,6 +13,9 @@ from django.contrib.auth import views as User
 from django.contrib.auth.models import User
 from django import forms
 from django.contrib.auth import logout
+
+
+from iisc import simulator
 # Create your views here.
 
 def home(request):
@@ -75,9 +78,16 @@ def add_file(request):
             if file_extension not in ['xlsx', 'json']:
                 context["status"]="Invalid Task file type. Please upload an Task file (.xlsx or json)."
                 return render(request,"accountsummary.html",context)
+             #Check if a file with the same name already exists
+            existing_file = file_upload.objects.filter(file_name=name)
+            if existing_file.exists():
+                context["status"]="Task File with this name already exists"
+                #form.add_error('file_name', 'File with this name already exists')
+                return render(request, 'accountsummary.html',context)
             file_upload(uploader=login_user,file_name=name,my_file=the_files).save()
             context["status"]="{}File Added Successfully"
             #simulator(the_files)
+            simulator.runsimulation(the_files)
             currentuser = request.user
             user_email = currentuser.email
             mail_message = f'The task  finished successfully.'\

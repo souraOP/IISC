@@ -1,7 +1,7 @@
 """ model simulator """
 import os
 import time
-from researchproject import (
+from iisc import (
     SIMULATOR_DIR,
     SIMULATOR,
     RESULTS_MAT
@@ -16,22 +16,19 @@ from researchproject import (
 # import subprocess
 # import sys
 
-
-def runsimulation():
+def runsimulation(input_files):
     # clear results dir
     try:
         os.remove(RESULTS_MAT)
         print("cleaning results directory")
     except OSError:
         pass
-
     start = time.time()
     os.chdir(SIMULATOR_DIR)
     print("running simulation ...")
     os.system(f'{SIMULATOR}')
     stop = time.time()
     print("simulation is complete \n Elapsed time: ", stop - start)
-
 
 if __name__ == '__main__':
     # G = create_graph(attributes=True, directed=True, sheet=test_case)
