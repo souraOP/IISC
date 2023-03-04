@@ -3,16 +3,18 @@ from django.shortcuts import render,HttpResponse
 
 #Authonication
 from django.views import View
-from .forms import RegisterForm,MyfileUploadForm
+from .forms import RegisterForm, MyfileUploadForm
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from iisc import settings
+from iisc.simulator import Simulator
 from .models import file_upload
 from django.contrib.auth import views as User
 from django.contrib.auth.models import User
 from django import forms
 from django.contrib.auth import logout
+from new.function import handle_uploaded_file
 
 
 from iisc import simulator
@@ -68,26 +70,36 @@ class Register(View):
 def add_file(request):
     context={}
     if request.method == 'POST':
-        form = MyfileUploadForm(request.POST,request.FILES)
+        form = MyfileUploadForm(request.POST, request.FILES)
 
         if form.is_valid():
             login_user=User.objects.get(username=request.user.username)
             name = form.cleaned_data['file_name']
             the_files = form.cleaned_data['files_data']
+
             file_extension = the_files.name.split(".")[-1].lower()
             if file_extension not in ['xlsx', 'json']:
                 context["status"]="Invalid Task file type. Please upload an Task file (.xlsx or json)."
-                return render(request,"accountsummary.html",context)
+                return render(request, "accountsummary.html", context)
              #Check if a file with the same name already exists
             existing_file = file_upload.objects.filter(file_name=name)
+
             if existing_file.exists():
                 context["status"]="Task File with this name already exists"
                 #form.add_error('file_name', 'File with this name already exists')
-                return render(request, 'accountsummary.html',context)
-            file_upload(uploader=login_user,file_name=name,my_file=the_files).save()
-            context["status"]="{}File Added Successfully"
-            #simulator(the_files)
-            simulator.runsimulation(the_files)
+                return render(request, 'accountsummary.html', context)
+            file_upload(uploader=login_user, file_name=name, my_file=the_files).save()
+            context["status"] = "{}File Added Successfully"
+
+            # FIXME:
+            # ----------------------------------------------------------------------------------------------------------
+            data_dir = handle_uploaded_file(file_name=the_files, task_name=name, username=request.user.username)
+            sim = Simulator(data_path=data_dir)
+            sim.runsimulation()
+            sim.save_results()
+
+            # ----------------------------------------------------------------------------------------------------------
+
             currentuser = request.user
             user_email = currentuser.email
             mail_message = f'The task  finished successfully.'\
@@ -102,7 +114,8 @@ def add_file(request):
             'form':MyfileUploadForm()
         }
         return render(request,"upload.html",context)
-        
+
+
 @login_required(login_url='http://127.0.0.1:8000/login/')
 def show_file(request):
     all_data = file_upload.objects.filter(uploader__id=request.user.id)
