@@ -94,8 +94,12 @@ def add_file(request):
             # FIXME:
             # ----------------------------------------------------------------------------------------------------------
             data_dir = handle_uploaded_file(file_name=the_files, task_name=name, username=request.user.username)
-            valid=validation.validate_spreadsheet(path_xlsx=os.path.join(data_dir,"input.xlsx"))
-            print(valid)
+            # valid=validation.validate_spreadsheet(path_xlsx=os.path.join(data_dir,"input.xlsx"))
+            # print(valid)
+            # valid=False
+            # if(valid==False):
+                # context["status"] = "{}Uploaded File Is Invalid"
+                # return render(request,"accountsummary.html",context)
             sim = Simulator(data_path=data_dir)
             sim.runsimulation()
             sim.save_results()
