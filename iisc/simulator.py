@@ -225,6 +225,5 @@ class Simulator:
 
 if __name__ == '__main__':
     sim = Simulator(data_path=TASK_DIR)
-
     sim.runsimulation() #task_dir=TASK_DIR)
     sim.save_results()

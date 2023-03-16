@@ -128,3 +128,13 @@ def show_file(request):
         'data':all_data
     }
     return render(request,'view.html',context)
+
+def delete(request,file_name):
+  member = file_upload.objects.get(file_name=file_name)
+  member.delete()
+  all_data = file_upload.objects.filter(uploader__id=request.user.id)
+  context = {
+        'data':all_data
+    }
+  context["status"] = "{}File Remove Successfully"
+  return render(request,'view.html',context)

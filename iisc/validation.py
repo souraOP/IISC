@@ -44,7 +44,6 @@ def validate_spreadsheet(path_xlsx: Path):
     
     if path_xlsx.suffix != ".xlsx":
         # print(path_xlsx.suffix)
-        print("Hello -Path Suffle")
         msg = f"excel file has wrong suffix: file_path = {path_xlsx}"
         logging.error(msg)
         return False
