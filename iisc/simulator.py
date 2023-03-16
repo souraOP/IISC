@@ -12,21 +12,38 @@ from iisc import (
     RESULTS_MAT,
     TASK_DIR
 )
+from pprint import pprint
 from types import SimpleNamespace
-from typing import Dict
+from typing import Dict, List
 import scipy.io as sio
 import logging
 from collections import OrderedDict
-# import json
-# import networkx as nx
-# from vedo import *
-# from network_creation.utils.graph_utils import create_graph
-# from network_creation import test_case
-# from typing import Dict
-# from collections import OrderedDict
+from dataclasses import dataclass
+
 # import subprocess
 # import sys
 # from simulator.utils.io_utils_py import _get_file
+
+
+# @dataclass
+# class GraphData:
+#     data_path: str
+#
+#     @property
+#     def graph_ndata_path(self):  # node data path
+#         return os.path.join(self.data_path, "Graph_nodes.csv")
+#
+#     @property
+#     def graph_ndata(self):  # node data path
+#         return pd.read_csv(self.graph_ndata_path)
+#
+#     @property
+#     def graph_edata_path(self):  # node data path
+#         return os.path.join(self.data_path, "Graph_edges.csv")
+#
+#     @property
+#     def graph_edata(self):  # node data path
+#         return pd.read_csv(self.graph_edata_path)
 
 
 class Simulator:
@@ -34,11 +51,63 @@ class Simulator:
         self, data_path: Path = None
     ):
         self.data_path = data_path
-        # self.graph_nodes_path = os.path.join(data_path, "Graph_nodes.csv")
-        # self.graph_edges_path = os.path.join(data_path, "Graph_edges.csv")
-        # self.r_path = os.path.join(data_path, "results.mat")
-        # self.r_json = os.path.join(data_path, "results.json")
+        self.r_path = os.path.join(data_path, "results.mat")
+        self.r_json = os.path.join(data_path, "results.json")
         self.input_xlsx = os.path.join(data_path, "input.xlsx")
+
+    @property
+    def graph_ndata_path(self):  # node data path
+        return os.path.join(self.data_path, "Graph_nodes.csv")
+
+    @property
+    def graph_ndata(self, dataframe=True):  # node data path
+        df = pd.read_csv(self.graph_ndata_path)
+        df.rename(columns={'Name': 'nodes'}, inplace=True)
+        if dataframe:
+            return df
+        else:
+            d = df.to_dict()
+            return d
+
+    @property
+    def graph_edata_path(self):  # node data path
+        return os.path.join(self.data_path, "Graph_edges.csv")
+
+    @property
+    def graph_edata(self, dataframe=True) -> pd.DataFrame:  # node data path
+
+        df = pd.read_csv(self.graph_edata_path)
+        df.rename(
+            columns={
+                'EndNodes_1': 'tail',
+                'EndNodes_2': 'head',
+                'branch_length': 'l',
+                'segment_dia': 'd',
+            },
+            inplace=True
+        )
+
+        if dataframe:
+            return df
+        else:
+            d = df.to_dict()
+            return d
+
+    @property
+    def h_ndata_path(self):  # node data path
+        return os.path.join(self.data_path, "H_nodes.csv")
+
+    @property
+    def h_ndata(self):  # node data path
+        return pd.read_csv(self.h_ndata_path)
+
+    @property
+    def h_edata_path(self):  # node data path
+        return os.path.join(self.data_path, "H_edges.csv")
+
+    @property
+    def h_edata(self):  # node data path
+        return pd.read_csv(self.h_edata_path)
 
     def runsimulation(self):  #input_files
         """
@@ -62,6 +131,10 @@ class Simulator:
         return sio.loadmat(self.r_path, struct_as_record=False, squeeze_me=True)
 
     @property
+    def pressure(self):
+        return list(self.graph_node_data['pressure'])
+
+    @property
     def species(self):
         return ["glc_ext", "glc", "lac", "lac_ext"]
 
@@ -69,111 +142,57 @@ class Simulator:
     def nspecies(self):
         return len(self.species)
 
-    def get_graph(self) -> Dict:
-        """
-        load graph data: nodes, edges, node_attributes and edge_attributes
-        - input is in excel file
-        - by default loads the input file with all graphs
-        :return:
-        """
-        output = {}
-        df = pd.read_excel(open(self.input_xlsx, 'rb'), sheet_name=0, index_col=None)
-        df = df[df.notna()]
-        tail = df.t
-        head = df.h
-        tail = tail[~np.isnan(tail)]
-        head = head[~np.isnan(head)]
-        tail = tail.astype(int)
-        head = head.astype(int)
-        ed_ls = [(t, h) for t, h in zip(tail, head)]
+    def get_graph_data(self) -> Dict:
 
-        d = df.d
-        l = df.l
-        d = d[~np.isnan(d)]
-        l = l[~np.isnan(l)]
+        # node data
+        n: pd.DataFrame = self.graph_ndata
+        pprint(n.columns)
 
-        output['tail'] = tail
-        output['head'] = head
-        output['l'] = l
-        output['d'] = d
-        output['ed_ls'] = ed_ls
+        # edge data
+        e: pd.DataFrame = self.graph_edata
+        pprint(e.columns)
 
-        if 'nodes' in df.columns:
-            nodes = df.nodes
-            nodes = nodes[~np.isnan(nodes)]
-            nodes = [int(n) for n in nodes]
-            output['nodes'] = nodes
+        ed_ls = [(t, h) for t, h in zip(e['tail'], e['head'])]
 
-        if 'hNode' and 'tNode' in df.columns:
-            output['source'] = df.hNode.dropna()
-            output['target'] = df.tNode.dropna()
+        xpos = OrderedDict(zip(n.nodes, n.xpos))
+        ypos = OrderedDict(zip(n.nodes, n.ypos))
+        zpos = OrderedDict(zip(n.nodes, n.zpos))
+        pressure = OrderedDict(zip(n.nodes, n.pressure))
 
-        if 'xpos' and 'ypos' and 'zpos' in df.columns:
-            xpos = df.xpos
-            xpos = xpos[~np.isnan(xpos)]
-            ypos = df.ypos
-            ypos = ypos[~np.isnan(ypos)]
-            zpos = df.zpos
-            zpos = zpos[~np.isnan(zpos)]
-            xyz = [[x, y, z] for x, y, z in zip(xpos, ypos, zpos)]
-            output['xyz'] = xyz
+        edge_x, edge_y, edge_z = [], [], []  # edge pos
+        pressure_gradient = []  # gradient color for pressure
+        u, v, w = [], [], []
 
-        return output
+        for edge in ed_ls:
+            source, target = edge
+            edge_x.extend([xpos[source], xpos[target], None])
+            edge_y.extend([ypos[source], ypos[target], None])
+            edge_z.extend([zpos[source], zpos[target], None])
+            pressure_gradient.extend([pressure[source], pressure[target], None])
 
-    def create_graph(
-            self,
-            directed=False,
-            attributes=False,
-            derived_attr=False,
-            sheet=None
-    ):
-        """
-        created directed/ undirected graph
-        :param derived_attr: node_radius and node_lengths of volume elements around the node
-        :param cd:  if true, sets centerline lengths as edge lengths
-        :param actual_pos: if False, sets the repositioned (uniform mesh) nodes coordinates (this is no longer
-        applicable, in v0 coordinates were moved  to create uniform mesh. In the current verison non-uniform mesh
-        is used. So always use actual_pos = False to set the vmtk node node coordinates.)
-        :param attributes:
-        :param output:
-        :param directed:
-        :return:
-        """
-        output = self.get_graph()
+            # orientation
+            u.append(xpos[target] - xpos[source])
+            v.append(ypos[target] - ypos[source])
+            w.append(zpos[target] - zpos[source])
 
-        if directed:
-            G = nx.OrderedDiGraph()
-        else:
-            G = nx.OrderedGraph()
+        # node info
+        g_data = {
+            'nodes': list(n.nodes),
+            'edges': ed_ls,
+            'nnodes': len(n.nodes),
+            'nedges': len(ed_ls),
+            'ncones': len(ed_ls),
+            'x': list(n.xpos), 'y': list(n.ypos), 'z': list(n.zpos),
+            'edge_x': edge_x, 'edge_y': edge_y, 'edge_z': edge_z,
+            'pressure_gradient': pressure_gradient,
+            'x_cone': list(e.mid_xpos), 'y_cone': list(e.mid_ypos), 'z_cone': list(e.mid_zpos),
+            'u_cone': u, 'v_cone': v, 'w_cone': w,
+            'velocity': list(e.velocity),
+            'max_velocity': max(e.velocity),
+            'min_velocity': min(e.velocity),
+        }
 
-        G.add_edges_from(output['ed_ls'])
-        if 'xyz' in output:
-            nodes = list(sorted(G.nodes()))
-            assert (nodes == output['nodes'])
-            pos = OrderedDict(zip(nodes, output['xyz']))
-            nx.set_node_attributes(G, pos, 'pos')
-
-        else:  # pseudo positions
-            logging.warning("Coordinate positions assigned from networkx's layout ...")
-            pos = nx.random_layout(G, dim=3, seed=1)
-            nx.set_node_attributes(G, pos, 'pos')
-
-        if attributes:
-            # edges = sorted(G.edges)
-            # assert(edges == list(zip(list(output['tail']), list(output['head']))))
-            edges = list(zip(list(output['tail']), list(output['head'])))
-            d = OrderedDict(zip(edges, output['d']))
-            nx.set_edge_attributes(G, d, 'd')
-            l = OrderedDict(zip(edges, output['l']))
-            nx.set_edge_attributes(G, l, 'l')
-
-        if derived_attr:
-            node_r = OrderedDict(zip(nodes, output['node_r']))
-            nx.set_node_attributes(G, node_r, 'node_r')
-            node_l = OrderedDict(zip(nodes, output['node_l']))
-            nx.set_node_attributes(G, node_l, 'node_l')
-
-        return G
+        return g_data
 
     def process_results2(self):
         r = self.load_results
@@ -183,7 +202,6 @@ class Simulator:
             r = SimpleNamespace(**r)
 
         # static
-
         d['pressure'] = [round(p, 3) for p in list(r.nodal_pressure)]
         d['velocity'] = [round(v, 3) for v in list(r.edge_velocity)]
 
@@ -199,77 +217,14 @@ class Simulator:
         return d
 
     def save_results(self):
-        d = self.process_results()
+
+        d = self.get_graph_data()
         with open(self.r_json, 'w') as outfile:
-            json.dump(d, outfile, indent=2)
-
-    def process_results(self):
-        """ topology of input network (undiscretized)"""
-
-        def node_data():
-            df: pd.DataFrame = pd.read_csv(self.graph_nodes_path)
-            df.rename(columns={'Name': 'nodes'}, inplace=True)
-
-            return {
-                'ids': list(df['nodes']),
-                'x': list(df['xpos']),
-                'y': list(df['ypos']),
-                'z': list(df['zpos']),
-                'pressure': list(df['pressure'])
-            }
-
-        def edge_data():
-            df: pd.DataFrame = pd.read_csv(self.graph_edges_path)
-            df.rename(
-                columns={
-                'EndNodes_1': 'tail',
-                'EndNodes_2': 'head',
-                'branch_length': 'l',
-                'segment_dia': 'd',
-                },
-                inplace=True
-            )
-
-            return {
-                'source': list(df['tail']),
-                'target': list(df['head']),
-                'midx': list(df['mid_xpos']),
-                'midy': list(df['mid_ypos']),
-                'midz': list(df['mid_zpos']),
-                'velocity': list(df['velocity']),
-                'max_velocity': max(df['velocity']),
-                'min_velocity': min(df['velocity']),
-            }
-
-        def plotly_input_format():
-            """
-            ploly input format:
-            (source, target, null)
-            """
-            ouput = self.get_graph()
-            exit()
-            edges = list(zip(r['edges']['source'], list(r['edges']['target'])))
-            for edge in edges:
-                s, t = edge
-                edge_x = [r['nodes']['x'][s]]
-                edge_y = []
-                edge_z = []
-            pass
-
-        # df = pd.read_csv(self.graph_edges_path)
-        # df.rename(columns={'Name': 'nodes'}, inplace=True)
-
-        r = {}
-        # raw data
-        # r["nodes"] = node_data()
-        # r["edges"] = edge_data()
-        plotly_input_format()
-        # plotly format
-        return r
+            json.dump(d, outfile, indent=4)
 
 
 if __name__ == '__main__':
     sim = Simulator(data_path=TASK_DIR)
-    # sim.runsimulation(task_dir=TASK_DIR)
-    # sim.save_results()
+
+    sim.runsimulation() #task_dir=TASK_DIR)
     sim.save_results()

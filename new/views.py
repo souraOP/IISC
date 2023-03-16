@@ -1,6 +1,5 @@
 from django.shortcuts import render,HttpResponse
 
-
 #Authonication
 from django.views import View
 from .forms import RegisterForm, MyfileUploadForm
@@ -15,9 +14,10 @@ from django.contrib.auth.models import User
 from django import forms
 from django.contrib.auth import logout
 from new.function import handle_uploaded_file
-
-
+import os
 from iisc import simulator
+from iisc import validation
+
 # Create your views here.
 
 def home(request):
@@ -94,17 +94,18 @@ def add_file(request):
             # FIXME:
             # ----------------------------------------------------------------------------------------------------------
             data_dir = handle_uploaded_file(file_name=the_files, task_name=name, username=request.user.username)
+            valid=validation.validate_spreadsheet(path_xlsx=os.path.join(data_dir,"input.xlsx"))
+            print(valid)
             sim = Simulator(data_path=data_dir)
             sim.runsimulation()
             sim.save_results()
-
             # ----------------------------------------------------------------------------------------------------------
 
             currentuser = request.user
             user_email = currentuser.email
             mail_message = f'The task  finished successfully.'\
                            f'You can view the results by visiting http://127.0.0.1:8000/view/'
-            send_mail('Your Result is Ready', mail_message, settings.EMAIL_HOST_USER, [user_email],fail_silently=False)
+           # send_mail('Your Result is Ready', mail_message, settings.EMAIL_HOST_USER, [user_email],fail_silently=False)
             logout(request)
             return render(request,"index.html",context)
         else:
