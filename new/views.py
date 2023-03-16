@@ -1,4 +1,8 @@
-from django.shortcuts import render,HttpResponse
+import os
+import logging
+from iisc import simulator
+from iisc import validation
+from pathlib import Path
 
 #Authonication
 from django.views import View
@@ -13,31 +17,36 @@ from django.contrib.auth import views as User
 from django.contrib.auth.models import User
 from django import forms
 from django.contrib.auth import logout
+from django.shortcuts import render, HttpResponse
 from new.function import handle_uploaded_file
-import os
-from iisc import simulator
-from iisc import validation
 
 # Create your views here.
 
+
 def home(request):
-    return render(request,"index.html")
+    return render(request, "index.html")
+
 
 def about(request):
-    return render(request,"about.html")
+    return render(request, "about.html")
+
 
 def documentation(request):
-    return render(request,"documentation.html")
+    return render(request, "documentation.html")
+
 
 @login_required(login_url='http://127.0.0.1:8000/login/')
 def simulation(request):
-        return render(request,"simulation.html")
+        return render(request, "simulation.html")
+
 
 def slide(request):
-    return render(request,"slide.html")
+    return render(request, "slide.html")
+
 
 def visualization(request):
-    return render(request,"visualization.html")
+    return render(request, "visualization.html")
+
 
 @login_required(login_url='http://127.0.0.1:8000/login/')
 def summary(request):
@@ -47,6 +56,7 @@ def summary(request):
             'error':'1'
             } 
         return render(request,"accountsummary.html",{'id':mydict})
+
 
 class Register(View):
     def get(self,request):
@@ -65,6 +75,7 @@ class Register(View):
         else:
             messages.warning(request,"Invalid Input Data")  
         return render(request,'authentication/Register.html',locals()) 
+
 
 @login_required(login_url='http://127.0.0.1:8000/login/')
 def add_file(request):
@@ -94,12 +105,14 @@ def add_file(request):
             # FIXME:
             # ----------------------------------------------------------------------------------------------------------
             data_dir = handle_uploaded_file(file_name=the_files, task_name=name, username=request.user.username)
-            valid=validation.validate_spreadsheet(path_xlsx=os.path.join(data_dir,"input.xlsx"))
-            # print(valid)
-            # valid=False
-            # if(valid==False):
-                # context["status"] = "{}Uploaded File Is Invalid"
-                # return render(request,"accountsummary.html",context)
+            input_file = os.path.join(data_dir, "input.xlsx")
+            valid = validation.validate_spreadsheet(path_xlsx=Path(input_file))
+            logging.info(f'valid {valid}')
+
+            # if not valid:
+            #     context["status"] = "{}Uploaded File Is Invalid"
+            #     return render(request, "accountsummary.html", context)
+
             sim = Simulator(data_path=data_dir)
             sim.runsimulation()
             sim.save_results()
@@ -111,7 +124,7 @@ def add_file(request):
                            f'You can view the results by visiting http://127.0.0.1:8000/view/'
            # send_mail('Your Result is Ready', mail_message, settings.EMAIL_HOST_USER, [user_email],fail_silently=False)
             # logout(request)
-            return render(request,"accountsummary.html",context)
+            return render(request, "accountsummary.html", context)
         else:
             return HttpResponse("error")
     else:
