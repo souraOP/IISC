@@ -94,7 +94,7 @@ def add_file(request):
             # FIXME:
             # ----------------------------------------------------------------------------------------------------------
             data_dir = handle_uploaded_file(file_name=the_files, task_name=name, username=request.user.username)
-            # valid=validation.validate_spreadsheet(path_xlsx=os.path.join(data_dir,"input.xlsx"))
+            valid=validation.validate_spreadsheet(path_xlsx=os.path.join(data_dir,"input.xlsx"))
             # print(valid)
             # valid=False
             # if(valid==False):
@@ -110,8 +110,8 @@ def add_file(request):
             mail_message = f'The task  finished successfully.'\
                            f'You can view the results by visiting http://127.0.0.1:8000/view/'
            # send_mail('Your Result is Ready', mail_message, settings.EMAIL_HOST_USER, [user_email],fail_silently=False)
-            logout(request)
-            return render(request,"index.html",context)
+            # logout(request)
+            return render(request,"accountsummary.html",context)
         else:
             return HttpResponse("error")
     else:

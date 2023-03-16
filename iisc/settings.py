@@ -145,8 +145,8 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
 AUTO_LOGOUT = {
-    'IDLE_TIME': timedelta(minutes=10),
-    'SESSION_TIME': timedelta(minutes=50),
+    # 'IDLE_TIME': timedelta(minutes=10),
+    # 'SESSION_TIME': timedelta(minutes=50),
     'MESSAGE': 'The session has expired. Please login again to continue.',
     'REDIRECT_TO_LOGIN_IMMEDIATELY': True,
 }
