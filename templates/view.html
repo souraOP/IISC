@@ -46,6 +46,7 @@ tr:nth-child(even) {
               <th>Status</th>
               <th>Input File Link</th>
               <th>Result Download Link</th>
+              <th>Delete</th>
           </tr>
       </thead>
       <tbody>
@@ -57,9 +58,15 @@ tr:nth-child(even) {
               <td>Finished</td>
               <td><a download href="{{d.my_file.url}}">Result</a></td>
               <td><a download href="{{d.my_file.url}}">Result</a></td> 
+              <td><a href="http://127.0.0.1:8000/delete/{{ d.file_name }}">delete</a></td>
           </tr>
           {% endfor %}
       </tbody>
   </table>
 </body>
 </html>
+{% if status%}
+   <script>
+    alert("{{status}}");
+   </script>
+{% endif %}
