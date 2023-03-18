@@ -95,8 +95,8 @@ def add_file(request):
             # ----------------------------------------------------------------------------------------------------------
             data_dir = handle_uploaded_file(file_name=the_files, task_name=name, username=request.user.username)
             input_file = os.path.join(data_dir, "input.xlsx")
-            valid = validation.validate_spreadsheet(path_xlsx=Path(input_file))
-            logging.info(f'valid {valid}')
+            # valid = validation.validate_spreadsheet(path_xlsx=Path(input_file))
+            # logging.info(f'valid {valid}')
 
             # print(valid)
             # valid=False
