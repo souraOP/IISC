@@ -17,6 +17,7 @@ from new.function import handle_uploaded_file
 import os
 from iisc import simulator
 from iisc import validation
+import mimetypes
 
 # Create your views here.
 
@@ -88,7 +89,7 @@ def add_file(request):
                 context["status"]="Task File with this name already exists"
                 #form.add_error('file_name', 'File with this name already exists')
                 return render(request, 'accountsummary.html', context)
-            file_upload(uploader=login_user, file_name=name, my_file=the_files).save()
+            file_upload(uploader=login_user, file_name=name).save()
             context["status"] = "{}File Added Successfully"
 
             # FIXME:
