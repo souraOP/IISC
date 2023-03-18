@@ -3,12 +3,12 @@ from . import views
 
 from .views import *
 from django.contrib.auth import views as auth_view
-from .forms import LoginForm,MyPasswordResetForm, MyPasswordChangeForm,MySetPasswordForm
+from .forms import LoginForm, MyPasswordResetForm, MyPasswordChangeForm, MySetPasswordForm
 
 urlpatterns =[
     path('', views.home,name="home"),
     path('about', views.about,name="about"),
-    path('documentation', views.documentation,name="documentation"),
+    # path('documentation', views.documentation,name="documentation"),
     path('slide', views.slide,name="slide"),
     path('simulation/', views.simulation,name="simulation"),
     path('visualization', views.visualization,name="visualization"),
@@ -28,4 +28,6 @@ urlpatterns =[
     path('password-reset-confirm/<uidb64>/<token>/',auth_view.PasswordResetConfirmView.as_view(template_name='authentication/password_reset_confirm.html',form_class=MySetPasswordForm),name='password_reset_confirm'),
     path('password-reset-complete/',auth_view.PasswordResetCompleteView.as_view(template_name='authentication/password_reset_complete.html'),name='password_reset_complete'),
 
+    # results
+    path('results/', results, name='results'),
 ]

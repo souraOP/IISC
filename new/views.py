@@ -2,7 +2,14 @@ import os
 import logging
 from iisc import simulator
 from iisc import validation
+from iisc import (
+    TASK_DIR as sample_dir,
+    SAMPLE_TASK_JSON as r_json,
+)
 from pathlib import Path
+import json
+from django.http import HttpResponse
+
 
 #Authonication
 from django.views import View
@@ -31,8 +38,8 @@ def about(request):
     return render(request, "about.html")
 
 
-def documentation(request):
-    return render(request, "documentation.html")
+# def documentation(request):
+#     return render(request, "documentation.html")
 
 
 @login_required(login_url='http://127.0.0.1:8000/login/')
@@ -47,6 +54,12 @@ def slide(request):
 def visualization(request):
     return render(request, "visualization.html")
 
+# def visualization(request):
+#     context = {
+#         'sample_dir': STATIC_DIR,
+#     }
+#     return render(request, "visualization_0.html", context)
+
 
 @login_required(login_url='http://127.0.0.1:8000/login/')
 def summary(request):
@@ -58,10 +71,18 @@ def summary(request):
         return render(request,"accountsummary.html",{'id':mydict})
 
 
+def results(request):
+    with open(r_json) as json_file:
+        data = json.load(json_file)
+        return HttpResponse(json.dumps(data), content_type='application/json')
+
+
 class Register(View):
+
     def get(self,request):
         form = RegisterForm()
         return render(request,'authentication/Register.html',locals())
+
     def post(self,request):
         form = RegisterForm(request.POST)
         user_email= request.POST['email']
@@ -122,7 +143,7 @@ def add_file(request):
             user_email = currentuser.email
             mail_message = f'The task  finished successfully.'\
                            f'You can view the results by visiting http://127.0.0.1:8000/view/'
-           # send_mail('Your Result is Ready', mail_message, settings.EMAIL_HOST_USER, [user_email],fail_silently=False)
+            # send_mail('Your Result is Ready', mail_message, settings.EMAIL_HOST_USER, [user_email],fail_silently=False)
             # logout(request)
             return render(request, "accountsummary.html", context)
         else:

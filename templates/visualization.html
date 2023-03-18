@@ -1,139 +1,313 @@
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <nav class="nav">
-        <img src="Pics/logo.png" alt="Bankist logo" class="nav__logo" id="logo" />
-        <ul class="nav__links">
-            <li class="nav__item">
-                <a class="nav__link" href="{% url 'documentation' %}">Documentation</a>
-            </li>
-            <li class="nav__item">
-                <a class="nav__link" href="{% url 'visualization' %}">Visualizations</a>
-            </li>
-            <li class="nav__item">
-                <a class="nav__link" href="{% url 'simulation' %}">Simulation</a>
-            </li>
-            <li class="nav__item">
-                <a class="nav__link" href="#section--4">Concepts</a>
-            </li>
-            <li class="nav__item">
-                <a class="nav__link" href="{% url 'about' %}">About</a>
-            </li>
-            <li class="nav__item">
-                <a class="nav__link" href="{% url 'login' %}">Login</a>
-            </li>
-            <li class="nav__item">
-                <a class="nav__link" href="https://github.com/DeepaMahm/differential_networks">Github</a>
-            </li>
-        </ul>
-    </nav>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        Visualization
-    </title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/2.7.10/cytoscape.js"></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js'></script>
-    <script src="{%static 'js/graphdata.js'%}"></script>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <script src="{%static 'js/script.js'%}"></script>
-</head>
-<style>
-    #cy {
-        width: 900px;
-        height: 500px;
-        position: absolute;
-        nav-down: 5px;
-        nav-right: 5px;
-    }
-</style>
-<body>
-    <div id="cy"></div>
-    <script>
-        var cy = cytoscape({
-            elements: data,
-            container: document.getElementById("cy"),
-            style: [{
-                selector: "node",
-                style: {
-                    shape: "hexagon",
-                    "background-color": "red",
-                    label: "data(id)"
-                }
-            }],
-            layout: {
-                name: "grid"
+<html>
+    <head>
+        <nav class="nav">
+            <img src="{%static 'images/logo.png'%}" alt="Bankist logo" class="nav__logo" id="logo" />
+            <ul class="nav__links">
+                <li class="nav__item">
+                    <a class="nav__link" href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="nav__item">
+                    <a class="nav__link" href="https://subhraneel77.github.io/Sphinx_Documentation/" target="_blank">Documentation</a>
+                </li>
+                <li class="nav__item">
+                    <a class="nav__link" href="{% url 'visualization' %}">Visualization</a>
+                </li>
+                <li class="nav__item">
+                    <a class="nav__link" href="{% url 'simulation' %}">Simulation</a>
+                </li>
+                <li class="nav__item">
+                    <a class="nav__link" href="{% url 'about' %}">About</a>
+                </li>
+                <li class="nav__item">
+                    <a class="nav__link" href="{% url 'login' %}">Login</a>
+                </li>
+                <li class="nav__item">
+                    <a href="https://github.com/DeepaMahm/differential_networks"><img src="{%static 'images/github_logo.png'%}" alt="Github logo" class="nav__logo" id="logo" /></a>
+                </li>
+            </ul>
+        </nav>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            Visualization
+        </title>
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <script src="https://cdn.plot.ly/plotly-1.58.5.min.js"></script>
+        <style>
+            .graph-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
             }
-        });
-    </script>
-    <script src="{%static 'js/script.js'%}"></script>
-    <!--<section class="section" id="section--2">
-        <div class="section__title">
-            <h2 class="section__description">Visualizations</h2>
-            <h3 class="section__header">
-                Everything as simple as possible, but no simpler.
-            </h3>
-        </div>
+            .main-panel {
+                width: 100%;
+                height: 800px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            .side-panel {
+			position: fixed;
+			top: 0;
+			bottom: 0;
+			right: -300px;
+			width: 300px;
+			background-color: #f2f2f2;
+			transition: right 0.5s;
+			overflow-y: auto;
+			padding: 20px;
+		}
+           
+            .side-panel.open {
+			right: 0;
+		    }
 
-        <div class="operations">
-            <div class="operations__tab-container">
-                <button class="btn operations__tab operations__tab--1 operations__tab--active" data-tab="1">
-                    <span>01</span>Instant Transfers
-                </button>
-                <button class="btn operations__tab operations__tab--2" data-tab="2">
-                    <span>02</span>Instant Loans
-                </button>
-                <button class="btn operations__tab operations__tab--3" data-tab="3">
-                    <span>03</span>Instant Closing
-                </button>
-            </div>
-            <div class="operations__content operations__content--1 operations__content--active">
-                <div class="operations__icon operations__icon--1">
-                    <svg>
-                        <use xlink:href="img/icons.svg#icon-upload"></use>
-                    </svg>
-                </div>
-                <h5 class="operations__header">
-                    Tranfser money to anyone, instantly! No fees, no BS.
-                </h5>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                </p>
-            </div>
+            .arrow {
+			position: absolute;
+			top: 20px;
+			left: 20px;
+			width: 0;
+			height: 0;
+			border-top: 20px solid transparent;
+			border-bottom: 20px solid transparent;
+			border-right: 20px solid #2196F3;
+			cursor: pointer;
+		}
 
-            <div class="operations__content operations__content--2">
-                <div class="operations__icon operations__icon--2">
-                    <svg>
-                        <use xlink:href="img/icons.svg#icon-home"></use>
-                    </svg>
-                </div>
-                <h5 class="operations__header">
-                    Buy a home or make your dreams come true, with instant loans.
-                </h5>
-                <p>
-                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                </p>
-            </div>
-            <div class="operations__content operations__content--3">
-                <div class="operations__icon operations__icon--3">
-                    <svg>
-                        <use xlink:href="img/icons.svg#icon-user-x"></use>
-                    </svg>
-                </div>
-                <h5 class="operations__header">
-                    No longer need your account? No problem! Close it instantly.
-                </h5>
-                <p>
-                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                </p>
+            .arrow.open {
+                transform: rotate(180deg);
+            }
+        </style>
+
+    </head>
+    <body>
+        
+        <div class="graph-container">
+            
+            <div id="network" class="main-panel"></div>
+            <div id="graph" class="side-panel">
+                <div class="arrow"></div>
             </div>
         </div>
-    </section>
--->
 
-</body>
+        <div id="main">
+            <!-- <button class="openbtn" onclick="openNav()">☰ Open Sidebar</button>   -->
+          </div>
 
+        <script>
+
+            function openNav() {
+                document.getElementById("graph").style.width = "500px";
+                document.getElementById("main").style.marginLeft = "500px";
+            }
+            function closeNav() {
+                document.getElementById("graph").style.width = "0";
+                document.getElementById("main").style.marginLeft= "0";
+            }
+
+            const sidepanel = document.querySelector('.side-panel');
+            const arrow = document.querySelector('.arrow');
+
+            arrow.addEventListener('click', function() {
+			sidepanel.classList.toggle('open');
+			arrow.classList.toggle('open');
+		});
+
+            //read the data from the json file
+            fetch("/results/")
+                .then(response => response.json())
+                .then( data => {
+                    //This part of the code is used to used initialize the variables which will be used to create a network graph
+
+                    //Initializing array for storing the variables
+                    var nnodes = data.nnodes;
+                    var nedges = data.nedges;
+                    var ncones = data.ncones;
+                    var x = data.x;
+                    var y = data.y;
+                    var z = data.z;
+                    var edge_x = data.edge_x;
+                    var edge_y = data.edge_y;
+                    var edge_z = data.edge_z;
+                    var pressure_edge_gradient = data.pressure_gradient;
+
+                    console.log(data)
+                    // Velocity and the max and min values of the velocity
+                    var velocity = data.velocity;
+                    var max_velocity = data.max_velocity;
+                    var min_velocity = data.min_velocity;
+
+                    //This part of code is used to initialize the variables which will be used to create cones
+                    var x_cone = data.x_cone;
+                    var y_cone = data.y_cone;
+                    var z_cone = data.z_cone;
+                    var u_cone = data.u_cone;
+                    var v_cone = data.v_cone;
+                    var w_cone = data.w_cone;
+                    console.log(x_cone[0])
+
+                    //Keeping a list of true and false values for the concentration and the cones which are used while displaying through layout
+                    var TrueList_cones = [];
+                    var FalseList_cones = [];
+                    for (var i = 0; i < ncones; i++) {
+                        TrueList_cones.push(true);
+                        FalseList_cones.push(false);
+                    };
+
+                    //This part of the code is used to create a pressure graph
+                    //Creating Edges for pressure graph
+                    var pressure_trace_edges = {
+                        x: edge_x,
+                        y: edge_y,
+                        z: edge_z,
+                        mode: 'lines',
+                        line: {
+                            colorscale: "YlOrRd",
+                            color: pressure_edge_gradient,
+                            width: 5,
+                            showscale: true,
+                            //decrease the size of the colorbar
+                            colorbar: {
+                                thickness: 20,
+                                len: 0.5,
+                                x: 0.9,
+                                y: 0.5,
+                                title: {
+                                    text: "Pressure",
+                                    side: "right"
+                                }
+                            }
+                        },
+                        type: 'scatter3d',
+                        name: "Pressure Edges",
+                        hoverinfo: 'none',
+                        visible: true,
+                        showlegend: true,
+                        
+                        //set the position of the legend
+                    };
+
+                    //This part of the code is used to create a velocity graph
+                    //Creating nodes for velocity graph
+                    var velocity_trace_nodes = {
+                        x: x,
+                        y: y,
+                        z: z,
+                        mode: 'markers',
+                        marker: {
+                            size: Array(nnodes).fill(6),
+                            sizeref: 0.5, 
+                            color: "rgb(200,200,200))",
+                            showscale: false,
+                        },
+                        type: 'scatter3d',
+                        name: "Velocity Nodes",
+                        hoverinfo: 'none',
+                        visible: false,
+                        showlegend: false,
+                    };
+
+                    //Creating edges for velocity graph
+                    var velocity_trace_edges = {
+                        x: edge_x,
+                        y: edge_y,
+                        z: edge_z,
+                        mode: 'lines',
+                        line: {
+                            color: "rgb(200,200,200)",
+                            width: 5,
+                            showscale: true,
+                        },
+                        type: 'scatter3d',
+                        name: "Velocity Edges",
+                        hoverinfo: 'none',
+                        showlegend: false,
+                        visible: false,
+                        showscale: false,
+                        
+                    };
+
+                    //Creating cones for velocity graph
+                    var velocity_trace_cones =[];
+
+                    for (var i = 0;i < ncones ;i++){
+                        
+                        var coneColor = velocity[i];
+                        var color = 'rgb(' + (coneColor-min_velocity)*255/(max_velocity-min_velocity) + ', 0, ' + (max_velocity-coneColor)*255/(max_velocity-min_velocity) + ')'; // create the color based on the velocity
+                        var coneColorScale = [[0, color], [1, color]];
+
+                        var single_cone = {
+                            x: [x_cone[i]],
+                            y: [y_cone[i]],
+                            z: [z_cone[i]],
+                            u: [u_cone[i]],
+                            v: [v_cone[i]],
+                            w: [w_cone[i]],
+                            type: 'cone',
+                            sizemode: 'absolute',
+                            sizeref: 5.2,
+                            anchor: 'tail',
+                            colorscale: coneColorScale,
+                            // color: 'red',
+                            showscale: false,
+                            name: 'Velocity Cones',
+                            hoverinfo: 'none',
+                            visible: false,
+                        };
+                        velocity_trace_cones.push(single_cone);
+                    };
+                    console.log(velocity_trace_cones)
+                    var data = [pressure_trace_edges, velocity_trace_nodes,velocity_trace_edges, ...velocity_trace_cones];
+
+                    //creating a list for dummy nodes for concentration nodes
+                    var layout = {
+                        updatemenus: [
+                            {
+                                x: 0,
+                                y: 10.5,
+                                yanchor: "top",
+                                xanchor: "left",
+                                showactive: false,
+                                direction: "Right",
+                                height: 8000,
+                                width: 8000,
+                                buttons: [
+                                    {
+                                        method: "restyle",
+                                        args: ["visible", [true,false,false,...FalseList_cones]],
+                                        label: "Pressure"
+                                    },
+                                    {
+                                        method: "restyle",
+                                        args: ["visible", [false,true,true,...TrueList_cones]],
+                                        label: "Velocity"
+                                    },
+                                ],
+                            },
+                            
+                        ],
+
+                        //for changing the 2D view
+                        xaxis: {
+                            visible: false,
+                            showgrid: false,
+                        },
+                        yaxis: {
+                            visible: false,
+                            showgrid: false,
+                        },
+                        zaxis: {
+                            visible: false,
+                            showgrid: false,
+                        }
+                    };
+                    Plotly.newPlot('network', data, layout);
+                })
+        </script>
+
+    </body>
 </html>
