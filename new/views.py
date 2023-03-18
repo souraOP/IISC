@@ -1,4 +1,4 @@
-from django.shortcuts import render,HttpResponse,Http404
+from django.shortcuts import render,HttpResponse
 
 #Authonication
 from django.views import View
@@ -17,8 +17,6 @@ from new.function import handle_uploaded_file
 import os
 from iisc import simulator
 from iisc import validation
-import mimetypes
-from django.conf import settings
 
 # Create your views here.
 
@@ -96,7 +94,10 @@ def add_file(request):
             # FIXME:
             # ----------------------------------------------------------------------------------------------------------
             data_dir = handle_uploaded_file(file_name=the_files, task_name=name, username=request.user.username)
-            valid=validation.validate_spreadsheet(path_xlsx=os.path.join(data_dir,"input.xlsx"))
+            input_file = os.path.join(data_dir, "input.xlsx")
+            valid = validation.validate_spreadsheet(path_xlsx=Path(input_file))
+            logging.info(f'valid {valid}')
+
             # print(valid)
             # valid=False
             # if(valid==False):
