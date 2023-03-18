@@ -15,8 +15,9 @@ urlpatterns =[
     
     path('summary/', views.summary,name="summary"),
     path('upload/',views.add_file,name="add_file"),
-    path('view/',views.show_file,name="view"),
-    
+    path('view/',views.view,name="view"),
+    path('show_file/<str:task_name>/',views.show_file,name="show_file"),
+    path('download/<str:file_name>/<str:task_name>/', views.download_file, name='download_file'),
     path('delete/<str:file_name>', views.delete, name='delete'),
 
 

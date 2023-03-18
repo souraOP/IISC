@@ -57,16 +57,11 @@ tr:nth-child(even) {
               <td>{{d.added_on}}</td>
               <td>Finished</td>
               <td><a download href="{{d.my_file.url}}">Result</a></td>
-              <td><a download href="{{d.my_file.url}}">Result</a></td> 
-              <td><a href="http://127.0.0.1:8000/delete/{{ d.file_name }}">delete</a></td>
+              <td><a href="{% url 'show_file' d.file_name %}">Result</a></td> 
+              <td><a href="{% url 'delete' d.file_name %}">delete</a></td>
           </tr>
           {% endfor %}
       </tbody>
   </table>
 </body>
 </html>
-{% if status%}
-   <script>
-    alert("{{status}}");
-   </script>
-{% endif %}

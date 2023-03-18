@@ -1,4 +1,4 @@
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render,HttpResponse,Http404
 
 #Authonication
 from django.views import View
@@ -17,6 +17,8 @@ from new.function import handle_uploaded_file
 import os
 from iisc import simulator
 from iisc import validation
+import mimetypes
+from django.conf import settings
 
 # Create your views here.
 
@@ -103,13 +105,14 @@ def add_file(request):
             sim = Simulator(data_path=data_dir)
             sim.runsimulation()
             sim.save_results()
+
             # ----------------------------------------------------------------------------------------------------------
 
             currentuser = request.user
             user_email = currentuser.email
             mail_message = f'The task  finished successfully.'\
                            f'You can view the results by visiting http://127.0.0.1:8000/view/'
-           # send_mail('Your Result is Ready', mail_message, settings.EMAIL_HOST_USER, [user_email],fail_silently=False)
+            send_mail('Your Result is Ready', mail_message, settings.EMAIL_HOST_USER, [user_email],fail_silently=False)
             # logout(request)
             return render(request,"accountsummary.html",context)
         else:
@@ -121,13 +124,30 @@ def add_file(request):
         return render(request,"upload.html",context)
 
 
+
 @login_required(login_url='http://127.0.0.1:8000/login/')
-def show_file(request):
+def view(request):
     all_data = file_upload.objects.filter(uploader__id=request.user.id)
     context = {
-        'data':all_data
+     'data':all_data
     }
     return render(request,'view.html',context)
+    
+@login_required(login_url='http://127.0.0.1:8000/login/')
+def show_file(request,task_name):
+    username = request.user.username
+    task_dir = os.path.join(settings.UPLOAD_DIR, str(username), str(task_name))
+    file_list = os.listdir(task_dir)
+    return render(request, 'show_file.html', {'file_list': file_list,'task_name':task_name})
+
+def download_file(request, file_name,task_name):
+    file_path = os.path.join(settings.UPLOAD_DIR, request.user.username, task_name , file_name)
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type=mimetypes.guess_type(file_path)[0])
+            response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(file_path)
+            return response
+    raise Http404
 
 def delete(request,file_name):
   member = file_upload.objects.get(file_name=file_name)
@@ -136,5 +156,7 @@ def delete(request,file_name):
   context = {
         'data':all_data
     }
-  context["status"] = "{}File Remove Successfully"
   return render(request,'view.html',context)
+
+
+
