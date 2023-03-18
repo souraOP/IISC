@@ -42,10 +42,15 @@ def visualization(request):
 
 @login_required(login_url='http://127.0.0.1:8000/login/')
 def summary(request):
+        user=request.user
+        all_data = file_upload.objects.filter(uploader__id=request.user.id)
+        total_files = all_data.count()
         mydict = {
-            'submit': '10',
-            'finish': '9',
-            'error':'1'
+            'user':user,
+            'data':total_files,
+            # 'submit': '10',
+            # 'finish': '9',
+            # 'error':'1'
             } 
         return render(request,"accountsummary.html",{'id':mydict})
 

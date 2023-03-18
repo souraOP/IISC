@@ -12,7 +12,7 @@
     <div class="container">
         <div class="cont left">
             <h2>My Account</h2>
-            <h3>Account Summary</h3>
+            <a href="http://127.0.0.1:8000/summary/">Account Summary</a>
             <h2>Tasks</h2>
             <a href="http://127.0.0.1:8000/upload/">Submit new task</a>
             <a href="http://127.0.0.1:8000/view/">Finished task</a>
@@ -21,17 +21,22 @@
             <a href="http://127.0.0.1:8000/passwordchange/">Change Password</a>
             <a href="http://127.0.0.1:8000/logout/">Logout</a>
         </div>
-        <div class="cont right">
-            <h1>My Account Summary</h1>
+        <div class="cont right"  style="display:block;" id="summary">
+            
+            <h1 style="text-align: center; margin: 10px;">User Profile</h1>
+            <h3 style="text-align: center; margin: 10px;">Username: {{ user.username }}</h3>
+            <h3 style="text-align: center; margin: 10px;">Email: {{ user.email }}</h3>
+
             <h2>Task overview</h2>
-            <h3>Submited tasks</h3>
-            <input value="{{id.submit}}" disabled>
-            <h3>Finished tasks</h3>
-            <input value="{{id.finish}}" disabled> 
-            <h3>Errors</h3>
-            <input value="{{id.error}}" disabled>
+            <h3 style="text-align: center; margin-top: 5px; padding: 3px;">Submited tasks<input value="{{id.data}}" disabled></h3>
+            <h3 style="text-align: center; margin-top: 5px; padding: 3px;">Finished tasks<input value="{{id.data}}" disabled> </h3>
+            <h3 style="text-align: center; margin-top: 5px; padding: 3px;">Errors<input value="0" disabled></h3>
+        </div>
+        <div class="cont right"  style="display: none;" id="upload">
+            
         </div>
     </div>
+    
 </body>
 </html>
 {% if status%}
