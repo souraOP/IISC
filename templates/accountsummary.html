@@ -8,6 +8,12 @@
     <title>Account</title>
     <link rel="stylesheet" href="{% static 'css/staccsummary.css' %}">
 </head>
+<style>
+    table{
+        margin: auto;
+        display: block;
+    }
+</style>
 <body>
     <div class="container">
         <div class="cont left">
@@ -28,13 +34,22 @@
             <h3 style="text-align: center; margin: 10px;">Email: {{ user.email }}</h3>
 
             <h2>Task overview</h2>
-            <h3 style="text-align: center; margin-top: 5px; padding: 3px;">Submited tasks<input value="{{id.data}}" disabled></h3>
-            <h3 style="text-align: center; margin-top: 5px; padding: 3px;">Finished tasks<input value="{{id.data}}" disabled> </h3>
-            <h3 style="text-align: center; margin-top: 5px; padding: 3px;">Errors<input value="0" disabled></h3>
+            <table style="margin: auto; display: block; width: 350px;">
+                <tr>
+                    <td> <h3>Submited tasks</h3></td>
+                    <td><input value="{{id.data}}" disabled></td>
+               </tr>
+               <tr>
+                    <td><h3>Finished tasks </h3></td>
+                    <td><input value="{{id.data}}" disabled></td>
+               </tr>
+               <tr>
+                   <td><h3>Errors</h3></td>
+                   <td><input value="0" disabled></td>
+               </tr>
+            </table>
         </div>
-        <div class="cont right"  style="display: none;" id="upload">
-            
-        </div>
+        
     </div>
     
 </body>

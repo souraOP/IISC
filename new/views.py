@@ -155,8 +155,8 @@ def add_file(request):
                            f'You can view the results by visiting http://127.0.0.1:8000/view/'
 
             send_mail('Your Result is Ready', mail_message, settings.EMAIL_HOST_USER, [user_email], fail_silently=False)
-            # logout(request)
-            return render(request, "accountsummary.html", context)
+            logout(request)
+            return render(request, "index.html", context)
         else:
             return HttpResponse("error")
     else:
