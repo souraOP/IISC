@@ -13,7 +13,7 @@ from pathlib import Path
 from django.http import HttpResponse, Http404
 
 
-#Authonication
+#Authentication
 from django.views import View
 from .forms import RegisterForm, MyfileUploadForm
 from django.contrib import messages

@@ -8,9 +8,60 @@
     <link rel="shortcut icon" type="image/png" href="{%static 'images/logo.png'%}" />
 
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600&display=swap" rel="stylesheet" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static 'css/style.css'%}">
     <title>Differential_networks</title>
+
+    <style>
+        .slider-container {
+            position: absolute;
+            top: 55%;
+            right: 0;
+            transform: translateY(-50%);
+            background-color: #f0f0f0;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .slider {
+            width: 500px;
+            margin: 0 auto;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .slider img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .slider button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: transparent;
+            border: none;
+            font-size: 24px;
+            color: #555;
+            padding: 0 10px;
+            cursor: pointer;
+        }
+
+        .slider button.prev {
+            left: 0;
+            background-color: #3cf22f68;
+        }
+
+        .slider button.next {
+            right: 0;
+            background-color: #3cf22f68;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -25,10 +76,10 @@
                     <a class="nav__link" href="https://subhraneel77.github.io/Sphinx_Documentation/" target="_blank">Documentation</a>
                 </li>
                 <li class="nav__item">
-                    <a class="nav__link" href="{% url 'visualization' %}">Visualization</a>
+                    <a class="nav__link" href="{% url 'simulation' %}">Simulation</a>
                 </li>
                 <li class="nav__item">
-                    <a class="nav__link" href="{% url 'simulation' %}">Simulation</a>
+                    <a class="nav__link" href="{% url 'visualization' %}">Visualization</a>
                 </li>
                 <li class="nav__item">
                     <a class="nav__link" href="{% url 'about' %}">About</a>
@@ -45,31 +96,68 @@
         <div class="header__title">
             <h1>
                 <!-- Green highlight effect -->
-                <span class="highlight">Differential</span> <br />
-                <span class="highlight">Networks</span>
+                <centre style="text-align:center"><span class="highlight">Differential&nbsp;Networks</span> <br /></centre>
             </h1>
             <h4>Simulator for hierarchical network dynamics.</h4>
-            <button class="btn--text btn--scroll-to">Learn more &DownArrow;</button>
-            <p> </p><img src="" class="header__img" alt="" />
-            <!-- Slideshow container -->
+             <p> </p><img src="" class="header__img" alt="" />
 
-            <!-- Slideshow container -->
-            <h2>
-                <a class="nav__link" href="{% url 'slide' %}"><br>EXPLORE</br>
-                </a>
-            </h2>
+            <!------------------------- SLIDER---------------------------------------------- -->
+            <div class="slider-container">
+                <h2>Slider Example</h2>
+                <div class="slider">
+                    <img src="{%static 'images/Slide1.png'%}" alt="Slide 1">
+                    <img src="{%static 'images/Slide2.png'%}" alt="Slide 2">
+                    <img src="{%static 'images/Slide3.gif'%}" alt="Slide 3">
+                    <img src="{%static 'images/Slide4.gif'%}" alt="Slide 4">
+                    <button class="prev">&#10094;</button>
+                    <button class="next">&#10095;</button>
+                </div>
+            </div>
+            <!------------------------- SLIDER---------------------------------------------- -->
 
         </div>
     </header>
 
+    <script>
+        var slideIndex = 1;
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            var i;
+            var slides = document.getElementsByClassName("slider")[0].getElementsByTagName("img");
+            slideIndex = n; // set slideIndex to the value of n
+            if (slideIndex > slides.length) {
+                slideIndex = 1
+            }
+            if (slideIndex < 1) {
+                slideIndex = slides.length
+            }
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            slides[slideIndex - 1].style.display = "block";
+        }
+
+
+        // add event listeners for prev and next buttons
+        document.querySelector('.prev').addEventListener('click', function() {
+            plusSlides(-1);
+        });
+
+        document.querySelector('.next').addEventListener('click', function() {
+            plusSlides(1);
+        });
+    </script>
 
     <div class="overlay hidden"></div>
-
     <script src="{%static 'js/script.js'%}"></script>
 </body>
-{% if status%}
-   <script>
-    alert("{{status}}");
-   </script>
-{% endif %}
 </html>
