@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UploadForm</title>
+    
 </head>
 <style>
     *{
@@ -17,67 +18,129 @@
 }
 
 body {
-align-items: center;
-background-color: #fff;
-display: flex;
-justify-content: center;
-height: 100vh;
+    background-color: #fff;
+    padding: auto;
+    margin-top: 50px;
+    margin-left: 30px;
 }
 
+
+
+.container{
+    display: flex;
+    flex-direction: wrap;
+}
+.cont{
+    border-radius: 20px;
+    box-sizing: border-box;
+    padding: 20px;
+    font-weight: bold;
+    margin: 20px;
+}
+.cont h2{
+   text-align: center;
+   text-decoration-line: underline;
+   color: blue;
+   margin: 10px;
+   font-weight: bold;
+}
+.cont.left a{
+    display: inline-block;
+    text-decoration: none;
+    padding: 10px;
+    font-size: large;
+}
+.cont.left{
+    background-color: rgb(234, 234, 252);
+    display: flex;
+    flex-direction: column;
+    padding-top: 30px;
+    width: 25%;
+}
+.cont.left a:hover{
+    color: rgb(6, 155, 248);
+    text-decoration: underline;
+}
+.cont.right{
+    background-color: rgb(245, 245, 249);
+    display: flex;
+    flex-direction: column;
+    padding-top: 30px;
+    width: 70%;
+}
 form {
-background-color: #f6f6f8;
-border-radius: 20px;
-box-sizing: border-box;
-padding: 20px;
-font-weight: bold;
+    background-color: #f6f6f8;
+    border-radius: 20px;
+    box-sizing: border-box;
+    padding: 20px;
+    font-weight: bold;
+}
+.form-group{
+    margin: 20px;
+    text-align: center;
 }
 form h2{
-text-align: center;
-text-decoration-line: underline;
-color: rgb(40, 40, 40);
-margin: 10px;
-font-weight: bold;
+    text-align: center;
+    text-decoration-line: underline;
+    color: rgb(40, 40, 40);
+    margin: 10px;
+    font-weight: bold;
 }
 form input{
-margin-top: 10px;
-color: black;
-
+    margin-top: 10px;
+    color: black;
 }
 .submit{
-background-color: rgb(9, 9, 9);
-border-radius: 12px;
-border: 0;
-box-sizing: border-box;
-color: #eee;
-cursor: pointer;
-font-size: 18px;
-height: 50px;
-margin-top: 38px;
-outline: 0;
-text-align: center;
-width: 100%;
+    background-color: rgb(9, 9, 9);
+    border-radius: 12px;
+    border: 0;
+    box-sizing: border-box;
+    color: #eee;
+    cursor: pointer;
+    font-size: 18px;
+    height: 50px;
+    outline: 0;
+    display: block;
+    margin: auto;
+    text-align: center;
+    width: 300px;
 }
 
 .submit:active {
-background-color: rgb(146, 200, 244);
+    background-color: rgb(146, 200, 244);
 }
 </style>
 <body>
     <div class="container">
-        <form action="{% url 'add_file' %}" method="post" enctype="multipart/form-data">
-            {%  csrf_token %}
-       <!-- <input type="text" name="filename" placeholder="Enter File Name"><br>
-            <input type="file" name="file"><br>-->
-            <div class="form-group">
-                <label for="{{form.file_name.id_for_label}}">Task Name</label>
-                {{form.file_name}}
-            </div>
-            <div class="form-group">
-                <label for="{{form.files.id_for_label}}">File Name</label>
-                {{form.files_data}}
-            </div>
-            <button type="submit" class="submit" onclick="checkExtension()">Submit</button>
-        </form>
+        <div class="cont left">
+            <h2>My Account</h2>
+            <a href="http://127.0.0.1:8000/summary/">Account Summary</a>
+            <h2>Tasks</h2>
+            <a href="http://127.0.0.1:8000/upload/">Submit new task</a>
+            <a href="http://127.0.0.1:8000/view/">Finished task</a>
+            <a href="#">Task error</a>
+            <h2>Account Options</h2>
+            <a href="http://127.0.0.1:8000/passwordchange/">Change Password</a>
+            <a href="http://127.0.0.1:8000/logout/">Logout</a>
+        </div>
+        <div class="cont right">
+            <h2>Submit new task</h2>
+            <form action="{% url 'add_file' %}" method="post" enctype="multipart/form-data">
+                {%  csrf_token %}
+                <!-- <input type="text" name="filename" placeholder="Enter File Name"><br>
+                <input type="file" name="file"><br>-->
+                <div class="form-group">
+                    <label for="{{form.file_name.id_for_label}}">Task Name</label>
+                    {{form.file_name}}
+                </div>
+                <div class="form-group">
+                    <label for="{{form.files.id_for_label}}">File Name</label>
+                    {{form.files_data}}
+                </div>
+                <button type="submit" class="submit" onclick="checkExtension()">Submit</button>
+            </form>
+        </div>
+        
     </div>
 
     <script>

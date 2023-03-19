@@ -159,3 +159,8 @@ AUTO_LOGOUT = {
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'upload')
+
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# # Add this line to define the UPLOAD_DIR
+UPLOAD_DIR = os.path.join(BASE_DIR, 'upload')

@@ -1,5 +1,8 @@
 import os
+import json
 import logging
+import mimetypes
+
 from iisc import simulator
 from iisc import validation
 from iisc import (
@@ -7,8 +10,7 @@ from iisc import (
     SAMPLE_TASK_JSON as r_json,
 )
 from pathlib import Path
-import json
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 
 
 #Authonication
@@ -26,6 +28,7 @@ from django import forms
 from django.contrib.auth import logout
 from django.shortcuts import render, HttpResponse
 from new.function import handle_uploaded_file
+
 
 # Create your views here.
 
@@ -63,10 +66,15 @@ def visualization(request):
 
 @login_required(login_url='http://127.0.0.1:8000/login/')
 def summary(request):
+        user=request.user
+        all_data = file_upload.objects.filter(uploader__id=request.user.id)
+        total_files = all_data.count()
         mydict = {
-            'submit': '10',
-            'finish': '9',
-            'error':'1'
+            'user':user,
+            'data':total_files,
+            # 'submit': '10',
+            # 'finish': '9',
+            # 'error':'1'
             } 
         return render(request,"accountsummary.html",{'id':mydict})
 
@@ -120,7 +128,7 @@ def add_file(request):
                 context["status"]="Task File with this name already exists"
                 #form.add_error('file_name', 'File with this name already exists')
                 return render(request, 'accountsummary.html', context)
-            file_upload(uploader=login_user, file_name=name, my_file=the_files).save()
+            file_upload(uploader=login_user, file_name=name).save()
             context["status"] = "{}File Added Successfully"
 
             # FIXME:
@@ -130,45 +138,69 @@ def add_file(request):
             valid = validation.validate_spreadsheet(path_xlsx=Path(input_file))
             logging.info(f'valid {valid}')
 
-            # if not valid:
-            #     context["status"] = "{}Uploaded File Is Invalid"
-            #     return render(request, "accountsummary.html", context)
-
+            # print(valid)
+            # valid=False
+            # if(valid==False):
+                # context["status"] = "{}Uploaded File Is Invalid"
+                # return render(request,"accountsummary.html",context)
             sim = Simulator(data_path=data_dir)
             sim.runsimulation()
             sim.save_results()
+
             # ----------------------------------------------------------------------------------------------------------
 
             currentuser = request.user
             user_email = currentuser.email
             mail_message = f'The task  finished successfully.'\
                            f'You can view the results by visiting http://127.0.0.1:8000/view/'
-            # send_mail('Your Result is Ready', mail_message, settings.EMAIL_HOST_USER, [user_email],fail_silently=False)
+
+            send_mail('Your Result is Ready', mail_message, settings.EMAIL_HOST_USER, [user_email], fail_silently=False)
             # logout(request)
             return render(request, "accountsummary.html", context)
         else:
             return HttpResponse("error")
     else:
         context = {
-            'form':MyfileUploadForm()
+            'form': MyfileUploadForm()
         }
-        return render(request,"upload.html",context)
+        return render(request, "upload.html", context)
 
 
 @login_required(login_url='http://127.0.0.1:8000/login/')
-def show_file(request):
+def view(request):
     all_data = file_upload.objects.filter(uploader__id=request.user.id)
     context = {
-        'data':all_data
+     'data':all_data
     }
-    return render(request,'view.html',context)
+    return render(request, 'view.html', context)
 
-def delete(request,file_name):
-  member = file_upload.objects.get(file_name=file_name)
-  member.delete()
-  all_data = file_upload.objects.filter(uploader__id=request.user.id)
-  context = {
-        'data':all_data
+
+@login_required(login_url='http://127.0.0.1:8000/login/')
+def show_file(request, task_name):
+    username = request.user.username
+    task_dir = os.path.join(settings.UPLOAD_DIR, str(username), str(task_name))
+    file_list = os.listdir(task_dir)
+    return render(request, 'show_file.html', {'file_list': file_list, 'task_name': task_name})
+
+
+def download_file(request, file_name, task_name):
+    file_path = os.path.join(settings.UPLOAD_DIR, request.user.username, task_name, file_name)
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type=mimetypes.guess_type(file_path)[0])
+            response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(file_path)
+            return response
+    raise Http404
+
+
+def delete(request, file_name):
+    member = file_upload.objects.get(file_name=file_name)
+    member.delete()
+    all_data = file_upload.objects.filter(uploader__id=request.user.id)
+    context = {
+        'data': all_data
     }
-  context["status"] = "{}File Remove Successfully"
-  return render(request,'view.html',context)
+    return render(request, 'view.html', context)
+
+
+
