@@ -113,7 +113,7 @@ def add_file(request):
         form = MyfileUploadForm(request.POST, request.FILES)
 
         if form.is_valid():
-            login_user=User.objects.get(username=request.user.username)
+            login_user = User.objects.get(username=request.user.username)
             name = form.cleaned_data['file_name']
             the_files = form.cleaned_data['files_data']
 
@@ -125,7 +125,7 @@ def add_file(request):
             existing_file = file_upload.objects.filter(file_name=name)
 
             if existing_file.exists():
-                context["status"]="Task File with this name already exists"
+                context["status"] = "Task File with this name already exists"
                 #form.add_error('file_name', 'File with this name already exists')
                 return render(request, 'accountsummary.html', context)
             file_upload(uploader=login_user, file_name=name).save()
