@@ -35,8 +35,7 @@ logger.addHandler(handler)
 
 def validate_spreadsheet(path_xlsx: Path):
     """ check the inputs"""
-    path_xlsx = Path(path_xlsx)
-   
+
     logging.info(f"*** {path_xlsx} ***")
     start_time = time.time()
     
@@ -78,7 +77,7 @@ def validate_spreadsheet(path_xlsx: Path):
         duration = time.time() - start_time
         logging.info(
             f"- {duration:.2f} [s] : Validated input file {path_xlsx.stem}")
-        # print("Hello -Success print")
+
     return success
 
 
