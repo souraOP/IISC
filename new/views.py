@@ -26,7 +26,7 @@ from django.contrib.auth import views as User
 from django.contrib.auth.models import User
 from django import forms
 from django.contrib.auth import logout
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse,redirect
 from new.function import handle_uploaded_file
 
 
@@ -72,9 +72,6 @@ def summary(request):
         mydict = {
             'user':user,
             'data':total_files,
-            # 'submit': '10',
-            # 'finish': '9',
-            # 'error':'1'
             } 
         return render(request,"accountsummary.html",{'id':mydict})
 
@@ -138,11 +135,11 @@ def add_file(request):
             valid = validation.validate_spreadsheet(path_xlsx=Path(input_file))
             logging.info(f'valid {valid}')
 
-            # print(valid)
+            print(valid)
             # valid=False
             # if(valid==False):
-                # context["status"] = "{}Uploaded File Is Invalid"
-                # return render(request,"accountsummary.html",context)
+            #     context["status"] = "{}Uploaded File Is Invalid"
+            #     return render(request,"accountsummary.html",context)
             sim = Simulator(data_path=data_dir)
             sim.runsimulation()
             sim.save_results()
@@ -155,14 +152,17 @@ def add_file(request):
                            f'You can view the results by visiting http://127.0.0.1:8000/view/'
 
             send_mail('Your Result is Ready', mail_message, settings.EMAIL_HOST_USER, [user_email], fail_silently=False)
-            logout(request)
-            return render(request, "index.html", context)
+            #logout(request)
+            # return render(request, "accountsummary.html", context)
+            return redirect('view')
+            
         else:
             return HttpResponse("error")
     else:
         context = {
             'form': MyfileUploadForm()
         }
+        
         return render(request, "upload.html", context)
 
 

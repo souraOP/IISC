@@ -7,19 +7,62 @@
     <title>result</title>
 </head>
 <style>
-    *{
-    margin: 20px;
+*{
     padding: 0;
-    box-sizing: inherit;
+    margin: 0;
+    box-sizing: border-box;
+    color: #1a1f36;
+    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Ubuntu,sans-serif;
+    word-wrap: break-word;
 }
 body {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 300;
-    color: rgb(32, 32, 33);
-    line-height: 1.9;
-    background-color: #f3f3f3;
+    background-color: #fff;
+    padding: auto;
+    margin-top: 50px;
+    margin-left: 30px;
 }
-
+.container{
+    display: flex;
+    flex-direction: wrap;
+}
+.cont{
+    border-radius: 20px;
+    box-sizing: border-box;
+    padding: 20px;
+    font-weight: bold;
+    margin: 20px;
+}
+.cont h2{
+   text-align: center;
+   text-decoration-line: underline;
+   color: blue;
+   margin: 10px;
+   font-weight: bold;
+}
+.cont.left a{
+    display: inline-block;
+    text-decoration: none;
+    padding: 10px;
+    font-size: large;
+}
+.cont.left{
+    background-color: rgb(234, 234, 252);
+    display: flex;
+    flex-direction: column;
+    padding-top: 30px;
+    width: 25%;
+}
+.cont.left a:hover{
+    color: rgb(6, 155, 248);
+    text-decoration: underline;
+}
+.cont.right{
+    background-color: rgb(245, 245, 249);
+    display: flex;
+    flex-direction: column;
+    padding-top: 30px;
+    width: 70%;
+}
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
@@ -36,30 +79,46 @@ tr:nth-child(even) {
 }
 </style>
 <body>
-    <h2 style="text-align: center;">Result Table</h2>
-    <table>
-      <thead>
-          <tr>
-              <th>S/N</th>
-              <th>Task Name</th>
-              <th>Submit Date</th>
-              <th>Status</th>
-              <th>Input & Result  File Download Link</th>
-              <th>Delete</th>
-          </tr>
-      </thead>
-      <tbody>
-          {% for d in data %}
-          <tr>
-              <td>{{forloop.counter}}</td>
-              <td>{{d.file_name}}</td>
-              <td>{{d.added_on}}</td>
-              <td>Finished</td>
-              <td><a href="{% url 'show_file' d.file_name %}">Download</a></td> 
-              <td><a href="{% url 'delete' d.file_name %}" onclick="if (confirm('Are you sure you want to delete this file?')) { return true; } else { return false; }">delete</a></td>
-          </tr>
-          {% endfor %}
-      </tbody>
-  </table>
+  <div class="container">
+    <div class="cont left">
+        <h2>My Account</h2>
+        <a href="http://127.0.0.1:8000/summary/">Account Summary</a>
+        <h2>Tasks</h2>
+        <a href="http://127.0.0.1:8000/upload/">Submit new task</a>
+        <a href="http://127.0.0.1:8000/view/">Finished task</a>
+        <a href="#">Task error</a>
+        <h2>Account Options</h2>
+        <a href="http://127.0.0.1:8000/passwordchange/">Change Password</a>
+        <a href="http://127.0.0.1:8000/logout/">Logout</a>
+    </div>
+    <div class="cont right">
+      <h2 style="text-align: center;">Result Table</h2>
+      <table>
+        <thead>
+            <tr>
+                <th>S/N</th>
+                <th>Task Name</th>
+                <th>Submit Date</th>
+                <th>Status</th>
+                <th>Input & Result  File Download Link</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in data %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{d.file_name}}</td>
+                <td>{{d.added_on}}</td>
+                <td>Finished</td>
+                <td><a href="{% url 'show_file' d.file_name %}">Download</a></td> 
+                <td><a href="{% url 'delete' d.file_name %}" onclick="if (confirm('Are you sure you want to delete this file?')) { return true; } else { return false; }">delete</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+  </div>
+    
 </body>
 </html>
