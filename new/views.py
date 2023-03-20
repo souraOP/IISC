@@ -2,6 +2,7 @@ import os
 import json
 import logging
 import mimetypes
+import shutil
 
 from iisc import simulator
 from iisc import validation
@@ -170,7 +171,7 @@ def add_file(request):
 def view(request):
     all_data = file_upload.objects.filter(uploader__id=request.user.id)
     context = {
-     'data':all_data
+     'data': all_data
     }
     return render(request, 'view.html', context)
 
@@ -192,10 +193,11 @@ def download_file(request, file_name, task_name):
             return response
     raise Http404
 
+
 # def download_file(request, file_name, task_name):
-
+#
 #     fpath = os.path.join(settings.UPLOAD_DIR, request.user.username, task_name, 'results.zip')
-
+#
 #     # open the zip file in binary mode
 #     with open(fpath, 'rb') as f:
 #         # create a new HTTP response object
@@ -207,13 +209,24 @@ def download_file(request, file_name, task_name):
 #         # return the HTTP response object
 #         return response
 
+
 def delete(request, file_name):
+
+    logging.info(f'delete {file_name}')
+
+    # remove from results table
     member = file_upload.objects.get(file_name=file_name)
     member.delete()
     all_data = file_upload.objects.filter(uploader__id=request.user.id)
     context = {
         'data': all_data
     }
+
+    # remove folder from upload
+    username = request.user.username
+    task_dir = os.path.join(settings.UPLOAD_DIR, str(username), str(file_name))
+    shutil.rmtree(task_dir)
+
     return render(request, 'view.html', context)
 
 
