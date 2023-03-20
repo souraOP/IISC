@@ -222,7 +222,19 @@ class Simulator:
         with open(self.r_json, 'w') as outfile:
             json.dump(d, outfile, indent=4)
 
+    def zip_results(self) -> None:
+    # get a list of all files in the folder
+    files = [os.path.join(self.data_path, f) for f in os.listdir(self.data_path) if
+             os.path.isfile(os.path.join(self.data_path, f))]
 
+    # create a new zip file
+    zip_file_path = os.path.join(self.data_path, 'results.zip')
+    with zipfile.ZipFile(zip_file_path, 'w') as zip:
+        # add each file to the zip file
+        for file in files:
+            zip.write(file, os.path.basename(file))
+
+            
 if __name__ == '__main__':
     sim = Simulator(data_path=TASK_DIR)
     sim.runsimulation() #task_dir=TASK_DIR)
