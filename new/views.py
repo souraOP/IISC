@@ -192,6 +192,20 @@ def download_file(request, file_name, task_name):
             return response
     raise Http404
 
+# def download_file(request, file_name, task_name):
+
+#     fpath = os.path.join(settings.UPLOAD_DIR, request.user.username, task_name, 'results.zip')
+
+#     # open the zip file in binary mode
+#     with open(fpath, 'rb') as f:
+#         # create a new HTTP response object
+#         response = HttpResponse(f.read(), content_type='application/zip')
+#         # set the content-disposition header to force a download
+#         response['Content-Disposition'] = 'attachment; filename="%s"' % os.path.basename(fpath)
+#         # delete the zip file from disk
+#         os.remove(fpath)
+#         # return the HTTP response object
+#         return response
 
 def delete(request, file_name):
     member = file_upload.objects.get(file_name=file_name)
