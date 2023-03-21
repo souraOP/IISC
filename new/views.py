@@ -3,6 +3,7 @@ import json
 import logging
 import mimetypes
 import shutil
+import configparser
 
 from iisc import simulator
 from iisc import validation
@@ -41,10 +42,6 @@ def about(request):
     return render(request, "about.html")
 
 
-# def documentation(request):
-#     return render(request, "documentation.html")
-
-
 @login_required(login_url='http://127.0.0.1:8000/login/')
 def simulation(request):
         return render(request, "simulation.html")
@@ -56,12 +53,6 @@ def slide(request):
 
 def visualization(request):
     return render(request, "visualization.html")
-
-# def visualization(request):
-#     context = {
-#         'sample_dir': STATIC_DIR,
-#     }
-#     return render(request, "visualization_0.html", context)
 
 
 @login_required(login_url='http://127.0.0.1:8000/login/')
@@ -164,6 +155,30 @@ def add_file(request):
         }
         
         return render(request, "upload.html", context)
+
+
+@login_required(login_url='http://127.0.0.1:8000/login/')
+def input_form(request):
+
+    username = request.user.username
+    fpath = os.path.join(settings.UPLOAD_DIR, str(username), 'input.ini')
+
+    if request.method == 'POST':
+
+        config = configparser.ConfigParser()
+        config['UserData'] = {
+            'input1': request.POST.get('input1'),
+            'input2': request.POST.get('input2'),
+            'input3': request.POST.get('input3'),
+            'input4': request.POST.get('input4'),
+        }
+        with open(fpath, 'w') as configfile:
+            config.write(configfile)
+        return redirect('view')
+        # return render(request, 'input_form.html')
+
+    else:
+        return HttpResponse("error")
 
 
 @login_required(login_url='http://127.0.0.1:8000/login/')
