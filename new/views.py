@@ -13,7 +13,6 @@ from iisc import (
 from pathlib import Path
 from django.http import HttpResponse, Http404
 
-
 #Authentication
 from django.views import View
 from .forms import RegisterForm, MyfileUploadForm
@@ -170,44 +169,53 @@ def add_file(request):
 @login_required(login_url='http://127.0.0.1:8000/login/')
 def view(request):
     all_data = file_upload.objects.filter(uploader__id=request.user.id)
+    logging.info(all_data)
     context = {
      'data': all_data
     }
+    logging.info(context)
     return render(request, 'view.html', context)
+
+
+# @login_required(login_url='http://127.0.0.1:8000/login/')
+# def show_file(request, task_name):
+#     username = request.user.username
+#     task_dir = os.path.join(settings.UPLOAD_DIR, str(username), str(task_name))
+#     file_list = os.listdir(task_dir)
+#     logging.info(f'show: {file_list}')
+#     return render(request, 'show_file.html', {'file_list': file_list, 'task_name': task_name})
+
+
+# def download_file(request, file_name, task_name):
+#     file_path = os.path.join(settings.UPLOAD_DIR, request.user.username, task_name, file_name)
+#     if os.path.exists(file_path):
+#         with open(file_path, 'rb') as fh:
+#             response = HttpResponse(fh.read(), content_type=mimetypes.guess_type(file_path)[0])
+#             response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(file_path)
+#             return response
+#     raise Http404
 
 
 @login_required(login_url='http://127.0.0.1:8000/login/')
 def show_file(request, task_name):
-    username = request.user.username
-    task_dir = os.path.join(settings.UPLOAD_DIR, str(username), str(task_name))
-    file_list = os.listdir(task_dir)
-    return render(request, 'show_file.html', {'file_list': file_list, 'task_name': task_name})
-
-
-def download_file(request, file_name, task_name):
-    file_path = os.path.join(settings.UPLOAD_DIR, request.user.username, task_name, file_name)
-    if os.path.exists(file_path):
-        with open(file_path, 'rb') as fh:
-            response = HttpResponse(fh.read(), content_type=mimetypes.guess_type(file_path)[0])
-            response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(file_path)
-            return response
+    fpath = os.path.join(settings.UPLOAD_DIR, request.user.username, task_name, 'results.zip')
+    if os.path.exists(fpath):
+        return render(request, 'show_file.html', {'file_list': ['results.zip'], 'task_name': task_name})
     raise Http404
 
 
-# def download_file(request, file_name, task_name):
-#
-#     fpath = os.path.join(settings.UPLOAD_DIR, request.user.username, task_name, 'results.zip')
-#
-#     # open the zip file in binary mode
-#     with open(fpath, 'rb') as f:
-#         # create a new HTTP response object
-#         response = HttpResponse(f.read(), content_type='application/zip')
-#         # set the content-disposition header to force a download
-#         response['Content-Disposition'] = 'attachment; filename="%s"' % os.path.basename(fpath)
-#         # delete the zip file from disk
-#         os.remove(fpath)
-#         # return the HTTP response object
-#         return response
+def download_file(request, file_name, task_name):
+
+    fpath = os.path.join(settings.UPLOAD_DIR, request.user.username, task_name, 'results.zip')
+    if os.path.exists(fpath):
+        # open the zip file in binary mode
+        with open(fpath, 'rb') as f:
+            # create a new HTTP response object
+            response = HttpResponse(f.read(), content_type='application/zip')
+            # set the content-disposition header to force a download
+            response['Content-Disposition'] = 'attachment; filename="%s"' % os.path.basename(fpath)
+            return response
+    raise Http404
 
 
 def delete(request, file_name):
