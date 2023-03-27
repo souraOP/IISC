@@ -2,6 +2,8 @@ import os
 import json
 import logging
 import mimetypes
+import shutil
+import configparser
 
 from iisc import simulator
 from iisc import validation
@@ -11,7 +13,6 @@ from iisc import (
 )
 from pathlib import Path
 from django.http import HttpResponse, Http404
-
 
 #Authentication
 from django.views import View
@@ -41,10 +42,6 @@ def about(request):
     return render(request, "about.html")
 
 
-# def documentation(request):
-#     return render(request, "documentation.html")
-
-
 @login_required(login_url='http://127.0.0.1:8000/login/')
 def simulation(request):
         return render(request, "simulation.html")
@@ -56,12 +53,6 @@ def slide(request):
 
 def visualization(request):
     return render(request, "visualization.html")
-
-# def visualization(request):
-#     context = {
-#         'sample_dir': STATIC_DIR,
-#     }
-#     return render(request, "visualization_0.html", context)
 
 
 @login_required(login_url='http://127.0.0.1:8000/login/')
@@ -172,53 +163,98 @@ def add_file(request):
 
 
 @login_required(login_url='http://127.0.0.1:8000/login/')
+def input_form(request):
+
+    username = request.user.username
+    fpath = os.path.join(settings.UPLOAD_DIR, str(username), 'input.ini')
+
+    if request.method == 'POST':
+
+        config = configparser.ConfigParser()
+        config['UserData'] = {
+            'input1': request.POST.get('input1'),
+            'input2': request.POST.get('input2'),
+            'input3': request.POST.get('input3'),
+            'input4': request.POST.get('input4'),
+        }
+        with open(fpath, 'w') as configfile:
+            config.write(configfile)
+        return redirect('view')
+        # return render(request, 'input_form.html')
+
+    else:
+        return HttpResponse("error")
+
+
+@login_required(login_url='http://127.0.0.1:8000/login/')
 def view(request):
     all_data = file_upload.objects.filter(uploader__id=request.user.id)
+    logging.info(all_data)
     context = {
-     'data':all_data
+     'data': all_data
     }
+    logging.info(context)
     return render(request, 'view.html', context)
+
+
+# @login_required(login_url='http://127.0.0.1:8000/login/')
+# def show_file(request, task_name):
+#     username = request.user.username
+#     task_dir = os.path.join(settings.UPLOAD_DIR, str(username), str(task_name))
+#     file_list = os.listdir(task_dir)
+#     logging.info(f'show: {file_list}')
+#     return render(request, 'show_file.html', {'file_list': file_list, 'task_name': task_name})
+
+
+# def download_file(request, file_name, task_name):
+#     file_path = os.path.join(settings.UPLOAD_DIR, request.user.username, task_name, file_name)
+#     if os.path.exists(file_path):
+#         with open(file_path, 'rb') as fh:
+#             response = HttpResponse(fh.read(), content_type=mimetypes.guess_type(file_path)[0])
+#             response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(file_path)
+#             return response
+#     raise Http404
 
 
 @login_required(login_url='http://127.0.0.1:8000/login/')
 def show_file(request, task_name):
-    username = request.user.username
-    task_dir = os.path.join(settings.UPLOAD_DIR, str(username), str(task_name))
-    file_list = os.listdir(task_dir)
-    return render(request, 'show_file.html', {'file_list': file_list, 'task_name': task_name})
+    fpath = os.path.join(settings.UPLOAD_DIR, request.user.username, task_name, 'results.zip')
+    if os.path.exists(fpath):
+        return render(request, 'show_file.html', {'file_list': ['results.zip'], 'task_name': task_name})
+    raise Http404
 
 
 def download_file(request, file_name, task_name):
-    file_path = os.path.join(settings.UPLOAD_DIR, request.user.username, task_name, file_name)
-    if os.path.exists(file_path):
-        with open(file_path, 'rb') as fh:
-            response = HttpResponse(fh.read(), content_type=mimetypes.guess_type(file_path)[0])
-            response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(file_path)
+
+    fpath = os.path.join(settings.UPLOAD_DIR, request.user.username, task_name, 'results.zip')
+    if os.path.exists(fpath):
+        # open the zip file in binary mode
+        with open(fpath, 'rb') as f:
+            # create a new HTTP response object
+            response = HttpResponse(f.read(), content_type='application/zip')
+            # set the content-disposition header to force a download
+            response['Content-Disposition'] = 'attachment; filename="%s"' % os.path.basename(fpath)
             return response
     raise Http404
 
-# def download_file(request, file_name, task_name):
-
-#     fpath = os.path.join(settings.UPLOAD_DIR, request.user.username, task_name, 'results.zip')
-
-#     # open the zip file in binary mode
-#     with open(fpath, 'rb') as f:
-#         # create a new HTTP response object
-#         response = HttpResponse(f.read(), content_type='application/zip')
-#         # set the content-disposition header to force a download
-#         response['Content-Disposition'] = 'attachment; filename="%s"' % os.path.basename(fpath)
-#         # delete the zip file from disk
-#         os.remove(fpath)
-#         # return the HTTP response object
-#         return response
 
 def delete(request, file_name):
+
+    logging.info(f'delete {file_name}')
+
+    # remove from results table
     member = file_upload.objects.get(file_name=file_name)
     member.delete()
     all_data = file_upload.objects.filter(uploader__id=request.user.id)
     context = {
         'data': all_data
     }
+
+    # remove folder from upload
+    username = request.user.username
+    task_dir = os.path.join(settings.UPLOAD_DIR, str(username), str(file_name))
+    shutil.rmtree(task_dir)
+
     return render(request, 'view.html', context)
 
 

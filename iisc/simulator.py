@@ -2,6 +2,8 @@
 import os
 import time
 import json
+import zipfile
+
 import numpy as np
 import pandas as pd
 import networkx as nx
@@ -224,7 +226,6 @@ class Simulator:
         
         # zip all result files
         self.zip_results()
-    
 
     def zip_results(self) -> None:
         # get a list of all files in the folder
@@ -241,5 +242,5 @@ class Simulator:
             
 if __name__ == '__main__':
     sim = Simulator(data_path=TASK_DIR)
-    sim.runsimulation() #task_dir=TASK_DIR)
+    sim.runsimulation()
     sim.save_results()
