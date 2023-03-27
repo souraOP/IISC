@@ -148,7 +148,7 @@ def add_file(request):
             mail_message = f'The task  finished successfully.'\
                            f'You can view the results by visiting http://127.0.0.1:8000/view/'
 
-            send_mail('Your Result is Ready', mail_message, settings.EMAIL_HOST_USER, [user_email], fail_silently=False)
+           # send_mail('Your Result is Ready', mail_message, settings.EMAIL_HOST_USER, [user_email], fail_silently=False)
             # return redirect("summary")
             return render(request, 'accountsummary.html',{'id':mydict,**context})
             
@@ -224,7 +224,7 @@ def show_file(request, task_name):
     raise Http404
 
 
-def download_file(request, file_name, task_name):
+def download_file(request,task_name):
 
     fpath = os.path.join(settings.UPLOAD_DIR, request.user.username, task_name, 'results.zip')
     if os.path.exists(fpath):
@@ -239,9 +239,7 @@ def download_file(request, file_name, task_name):
 
 
 def delete(request, file_name):
-
     logging.info(f'delete {file_name}')
-
     # remove from results table
     member = file_upload.objects.get(file_name=file_name)
     member.delete()
@@ -249,13 +247,11 @@ def delete(request, file_name):
     context = {
         'data': all_data
     }
-
     # remove folder from upload
     username = request.user.username
     task_dir = os.path.join(settings.UPLOAD_DIR, str(username), str(file_name))
     shutil.rmtree(task_dir)
-
-    return render(request, 'view.html', context)
-
+    # return render(request, 'view.html', context)
+    return redirect('view')
 
 

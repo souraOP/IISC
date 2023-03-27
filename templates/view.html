@@ -111,7 +111,7 @@ tr:nth-child(even) {
                 <td>{{d.file_name}}</td>
                 <td>{{d.added_on}}</td>
                 <td>Finished</td>
-                <td><a href="{% url 'show_file' d.file_name %}">Download</a></td> 
+                <td><a href="{% url 'download_file' d.file_name %}">Download</a></td> 
                 <td><a href="{% url 'delete' d.file_name %}" onclick="if (confirm('Are you sure you want to delete this file?')) { return true; } else { return false; }">delete</a></td>
             </tr>
             {% endfor %}
