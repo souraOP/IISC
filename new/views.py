@@ -150,6 +150,13 @@ def add_file(request):
 
            # send_mail('Your Result is Ready', mail_message, settings.EMAIL_HOST_USER, [user_email], fail_silently=False)
             # return redirect("summary")
+            user=request.user
+            all_data = file_upload.objects.filter(uploader__id=request.user.id)
+            total_files = all_data.count()
+            mydict = {
+                'user':user,
+                'data':total_files,
+            }
             return render(request, 'accountsummary.html',{'id':mydict,**context})
             
         else:
