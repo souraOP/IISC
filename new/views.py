@@ -113,18 +113,24 @@ def add_file(request):
             login_user = User.objects.get(username=request.user.username)
             name = form.cleaned_data['file_name']
             the_files = form.cleaned_data['files_data']
+            user=request.user
+            all_data = file_upload.objects.filter(uploader__id=request.user.id)
+            total_files = all_data.count()
+            mydict = {
+                'user':user,
+                'data':total_files,
+            }
 
             file_extension = the_files.name.split(".")[-1].lower()
             if file_extension not in ['xlsx', 'json']:
                 context["status"]="Invalid Task file type. Please upload an Task file (.xlsx or json)."
-                return render(request, "accountsummary.html", context)
+                return render(request,'accountsummary.html',{'id':mydict,**context})
              #Check if a file with the same name already exists
             existing_file = file_upload.objects.filter(file_name=name)
 
             if existing_file.exists():
                 context["status"] = "Task File with this name already exists"
-                #form.add_error('file_name', 'File with this name already exists')
-                return render(request, 'accountsummary.html', context)
+                return render(request, 'accountsummary.html',{'id':mydict,**context})
             file_upload(uploader=login_user, file_name=name).save()
             context["status"] = "{}File Added Successfully"
 
@@ -152,9 +158,8 @@ def add_file(request):
                            f'You can view the results by visiting http://127.0.0.1:8000/view/'
 
             send_mail('Your Result is Ready', mail_message, settings.EMAIL_HOST_USER, [user_email], fail_silently=False)
-            #logout(request)
-            # return render(request, "accountsummary.html", context)
-            return redirect('view')
+            # return redirect("summary")
+            return render(request, 'accountsummary.html',{'id':mydict,**context})
             
         else:
             return HttpResponse("error")
