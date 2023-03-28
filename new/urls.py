@@ -14,7 +14,8 @@ urlpatterns = [
     path('visualization', views.visualization, name="visualization"),
     
     path('summary/', views.summary, name="summary"),
-    path('upload/', views.add_file, name="add_file"),
+    # path('upload/', views.add_file, name="add_file"),
+    path('add_file/', views.add_file, name="add_file"),
 
     # FIXME:
     path('input-form/', views.input_form, name='input_form'),

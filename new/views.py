@@ -29,7 +29,7 @@ from django import forms
 from django.contrib.auth import logout
 from django.shortcuts import render, HttpResponse,redirect
 from new.function import handle_uploaded_file
-
+from django.contrib import messages
 
 # Create your views here.
 
@@ -60,11 +60,12 @@ def summary(request):
         user=request.user
         all_data = file_upload.objects.filter(uploader__id=request.user.id)
         total_files = all_data.count()
-        mydict = {
-            'user':user,
-            'data':total_files,
-            } 
-        return render(request,"accountsummary.html",{'id':mydict})
+        # mydict = {
+        #     'user':user,
+        #     'data':total_files,
+        #     } 
+        # return render(request,"accountsummary.html",{'id':mydict})
+        return render(request,"accountsummary.html",locals())
 
 
 def results(request):
@@ -107,23 +108,28 @@ def add_file(request):
             user=request.user
             all_data = file_upload.objects.filter(uploader__id=request.user.id)
             total_files = all_data.count()
-            mydict = {
-                'user':user,
-                'data':total_files,
-            }
+            # mydict = {
+            #     'user':user,
+            #     'data':total_files,
+            # }
 
             file_extension = the_files.name.split(".")[-1].lower()
             if file_extension not in ['xlsx', 'json']:
-                context["status"]="Invalid Task file type. Please upload an Task file (.xlsx or json)."
-                return render(request,'accountsummary.html',{'id':mydict,**context})
+                messages.warning(request,"Invalid Task file type. Please upload an Task file (.xlsx or json).")
+                return render(request,"accountsummary.html",locals())
+                # context["status"]="Invalid Task file type. Please upload an Task file (.xlsx or json)."
+                # return render(request,'accountsummary.html',{'id':mydict,**context})
              #Check if a file with the same name already exists
             existing_file = file_upload.objects.filter(file_name=name)
 
             if existing_file.exists():
-                context["status"] = "Task File with this name already exists"
-                return render(request, 'accountsummary.html',{'id':mydict,**context})
+                messages.warning(request,"Task File with this name already exists")
+                return render(request,"accountsummary.html",locals())
+                # context["status"] = "Task File with this name already exists"
+                # return render(request, 'accountsummary.html',{'id':mydict,**context})
             file_upload(uploader=login_user, file_name=name).save()
-            context["status"] = "{}File Added Successfully"
+            messages.success(request,"Congratulation! File Added Successfully")
+            # context["status"] = "{}File Added Successfully"
 
             # FIXME:
             # ----------------------------------------------------------------------------------------------------------
@@ -153,11 +159,12 @@ def add_file(request):
             user=request.user
             all_data = file_upload.objects.filter(uploader__id=request.user.id)
             total_files = all_data.count()
-            mydict = {
-                'user':user,
-                'data':total_files,
-            }
-            return render(request, 'accountsummary.html',{'id':mydict,**context})
+            # mydict = {
+            #     'user':user,
+            #     'data':total_files,
+            # }
+            # return render(request, 'accountsummary.html',{'id':mydict,**context})
+            return render(request,"accountsummary.html",locals())
             
         else:
             return HttpResponse("error")

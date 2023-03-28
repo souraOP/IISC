@@ -15,12 +15,23 @@
     }
 </style>
 <body>
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_error %}
+            <p class="alert alert-danger my-3">{{error}}</p>
+        {% endfor %}
+    {% endif %} 
+                    
+    {% if messages %}
+        {% for msg in messages %}
+            <div class="alert alert-{{msg.tags}}" role="alert">{{msg}}</div>
+        {% endfor %}
+    {% endif %} 
     <div class="container">
         <div class="cont left">
             <h2>My Account</h2>
             <a href="http://127.0.0.1:8000/summary/">Account Summary</a>
             <h2>Tasks</h2>
-            <a href="http://127.0.0.1:8000/upload/">Submit new task</a>
+            <a href="http://127.0.0.1:8000/add_file/">Submit new task</a>
             <a href="http://127.0.0.1:8000/view/">Finished task</a>
             <a href="#">Task error</a>
             <h2>Account Options</h2>
@@ -37,11 +48,12 @@
             <table style="margin: auto; display: block; width: 350px;">
                 <tr>
                     <td> <h3>Submited tasks</h3></td>
-                    <td><input value="{{id.data}}" disabled></td>
+                    <!-- <td><input value="{{id.data}}" disabled></td> -->
+                    <td><input value="{{total_files}}" disabled></td>
                </tr>
                <tr>
                     <td><h3>Finished tasks </h3></td>
-                    <td><input value="{{id.data}}" disabled></td>
+                    <td><input value="{{total_files}}" disabled></td>
                </tr>
                <tr>
                    <td><h3>Errors</h3></td>
