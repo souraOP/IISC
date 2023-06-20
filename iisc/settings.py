@@ -145,8 +145,8 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_POST = 587
 #EMAIL_HOST_USER = 'simgraph.iisc@gmail.com'
 #EMAIL_HOST_PASSWORD = 'ecojhhdzdounewvl'
-EMAIL_HOST_USER = 'pranavkumar97954@gmail.com'
-EMAIL_HOST_PASSWORD = 'psfukvcfalmvmoof'
+EMAIL_HOST_USER = 'iamrohit1702@gmail.com'
+EMAIL_HOST_PASSWORD = 'jujwwelrbfdvsvmc'
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
