@@ -14,6 +14,9 @@
                     <a class="nav__link" href="{% url 'simulation' %}">Simulation</a>
                 </li>
                 <li class="nav__item">
+                    <a class="nav__link"><span style = "font-size: 1.7rem; cursor: pointer;" onclick="openNav()">Load Model</span></a>
+                </li>
+                <li class="nav__item">
                     <a class="nav__link" href="{% url 'visualization' %}">Visualization</a>
                 </li>
                 <li class="nav__item">
@@ -51,56 +54,269 @@
                 align-items: center;
             }
             .side-panel {
-			position: fixed;
-			top: 0;
-			bottom: 0;
-			right: -300px;
-			width: 300px;
-			background-color: #f2f2f2;
-			transition: right 0.5s;
-			overflow-y: auto;
-			padding: 20px;
-		}
+                position: fixed;
+                top: 0px;
+                bottom: 0;
+                right: -300px;
+                width: 300px;
+                background-color: red;
+                transition: right 0.5s;
+                overflow-y: auto;
+                padding: 20px;
+		    }
            
             .side-panel.open {
-			right: 0;
+                right: 0;
 		    }
 
             .arrow {
-			position: absolute;
-			top: 20px;
-			left: 20px;
-			width: 0;
-			height: 0;
-			border-top: 20px solid transparent;
-			border-bottom: 20px solid transparent;
-			border-right: 20px solid #2196F3;
-			cursor: pointer;
-		}
+                position: absolute;
+                top: 20px;
+                left: 20px;
+                width: 0;
+                height: 0;
+                border-top: 20px solid transparent;
+                border-bottom: 20px solid transparent;
+                border-right: 20px solid #2196F3;
+                cursor: pointer;
+		    }
 
             .arrow.open {
                 transform: rotate(180deg);
+            }
+
+            {# Added Code for side bar  #}
+
+            .sidenav {
+              height: 100%;
+              width: 0;
+              position: fixed;
+              z-index: 3;
+              top: 80px;
+              left: 0;
+              background-color: #111;
+              overflow-x: hidden;
+              transition: 0.5s;
+              padding-top: 60px;
+            }
+
+            .sidenav a {
+              padding: 8px 8px 8px 32px;
+              text-decoration: none;
+              font-size: 25px;
+              color: #818181;
+              display: block;
+              transition: 0.3s;
+            }
+
+            .sidenav a:hover {
+              color: #f1f1f1;
+            }
+
+            .sidenav .closebtn {
+              position: absolute;
+              top: 0;
+              right: 25px;
+              font-size: 36px;
+              margin-left: 50px;
+            }
+
+            #main {
+                transition: margin-left .5s;
+                padding: 16px;
+            }
+
+            .form {
+                border-radius: 20px;
+                box-sizing: border-box;
+                height: 500px;
+                padding: 20px;
+                width: inherit;
+                font-size: 1.8rem;
+            }
+
+            .title{
+                color: #eee;
+                font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace;
+                font-size: 25px;
+                font-weight: 400;
+                padding-left: 15px;
+                margin-top: 15px;
+            }
+
+
+            .input-container {
+                height: 50px;
+                position: relative;
+                width: 100%;
+            }
+
+            .soura {
+              margin-top: 40px;
+            }
+
+            .ic2 {
+              margin-top: 30px;
+            }
+
+            .input {
+              background-color: #303245;
+              border-radius: 12px;
+              border: 0;
+              box-sizing: border-box;
+              color: #eee;
+              font-size: 18px;
+              height: 100%;
+              outline: 0;
+              padding: 4px 20px 0;
+              width: 100%;
+            }
+
+            .cut {
+              background-color: black;
+              border-radius: 10px;
+              height: 20px;
+              left: 20px;
+              position: absolute;
+              top: -20px;
+              transform: translateY(0);
+              transition: transform 200ms;
+
+            }
+
+            .arrowsize-cut{
+                width: 80px;
+            }
+
+            .concentration-cut{
+                width: 105px;
+            }
+
+            .example-cut{
+                width: 140px;
+            }
+
+            .labelsize-cut{
+                width: 80px;
+            }
+
+            .input:focus ~ .cut,
+            .input:not(:placeholder-shown) ~ .cut {
+              transform: translateY(8px);
+            }
+
+            .placeholder {
+              color: #65657b;
+              font-family: sans-serif;
+              left: 20px;
+              line-height: 14px;
+              pointer-events: none;
+              position: absolute;
+              transform-origin: 0 50%;
+              transition: transform 200ms, color 200ms;
+              top: 20px;
+            }
+
+            .input:focus ~ .placeholder,
+            .input:not(:placeholder-shown) ~ .placeholder {
+              transform: translateY(-30px) translateX(10px) scale(0.75);
+            }
+
+            .input:not(:placeholder-shown) ~ .placeholder {
+              color: #808097;
+            }
+
+            .input:focus ~ .placeholder {
+              color: #dc2f55;
+            }
+
+            .submit {
+              background-color: #08d;
+              border-radius: 12px;
+              border: 0;
+              box-sizing: border-box;
+              color: #eee;
+              cursor: pointer;
+              font-size: 18px;
+              height: 50px;
+              margin-top: 38px;
+              outline: 0;
+              text-align: center;
+              width: 100%;
+            }
+
+            .submit:active {
+              background-color: #06b;
+            }
+
+
+
+
+
+            /* Adding the button */
+
+            @media screen and (max-height: 450px) {
+              .sidenav {padding-top: 15px;}
+              .sidenav a {font-size: 18px;}
             }
         </style>
 
     </head>
     <body>
-        
+        <!-- Code written by sourasish -->
+        <div id = "main">
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                <div class="form">
+                    <div class = "title"> Load a Model</div>
+                  <div class="input-container soura">
+                      <input id="examples" class="input" type="text" placeholder=" " />
+                      <div class="cut example-cut"></div>
+                      <label for="examples" class="placeholder">Examples #1 #2 #3</label>
+                  </div>
+                  <div class="input-container ic2">
+                      <input id="concentration" class="input" type="text" placeholder=" " />
+                      <div class="cut concentration-cut"></div>
+                      <label for="concentration" class="placeholder">Concentration</label>
+                  </div>
+                  <div class="input-container ic2">
+                      <input id="arrowsize" class="input" type="text" placeholder=" " />
+                      <div class="cut arrowsize-cut"></div>
+                      <label for="arrowsize" class="placeholder">Arrow Size</label>
+                  </div>
+                    <div class="input-container ic2">
+                      <input id="labelsize" class="input" type="text" placeholder=" " />
+                      <div class="cut labelsize-cut"></div>
+                      <label for="labelsize" class="placeholder">Label Size</label>
+                    </div>
+                  <button type="text" class="submit">Submit</button>
+                </div>
+            <a href = "#">Download</a>
+        </div>
+
+
+
+
+
         <div class="graph-container">
-            
             <div id="network" class="main-panel"></div>
             <div id="graph" class="side-panel">
                 <div class="arrow"></div>
+
             </div>
         </div>
 
-        <div id="main">
-            <!-- <button class="openbtn" onclick="openNav()">☰ Open Sidebar</button>   -->
-          </div>
+
+
+        <div id="soura">
+{#            <button class="openbtn" onclick="openNav()">☰ Open Sidebar</button>#}
+
+        </div>
+
 
         <script>
 
-            function openNav() {
+            /* function openNav() {
                 document.getElementById("graph").style.width = "500px";
                 document.getElementById("main").style.marginLeft = "500px";
             }
@@ -115,7 +331,17 @@
             arrow.addEventListener('click', function() {
 			sidepanel.classList.toggle('open');
 			arrow.classList.toggle('open');
-		});
+		}); */
+
+            function openNav() {
+                document.getElementById("mySidenav").style.width = "250px";
+                document.getElementById("main").style.marginLeft = "250px";
+            }
+
+            function closeNav() {
+                document.getElementById("mySidenav").style.width = "0";
+                document.getElementById("main").style.marginLeft = "0";
+            }
 
             //read the data from the json file
             fetch("/results/")
@@ -267,15 +493,27 @@
                     var layout = {
                         updatemenus: [
                             {
-                                x: 0,
-                                y: 15.5,
+                                x: 0.1, //dont change this value, if needed do minute changes like 0.1 wise - drop down button x axis
+                                y: 0.950,   //dont change this value, if needed, do minute changes like 0.1 wise - drop down button y axis (keep it close to load button value so that both of them are at the same level)
                                 yanchor: "top",
                                 xanchor: "left",
-                                showactive: false,
-                                direction: "Right",
-                                height: 8000,
+                                showactive: true,
+                                pad: [
+                                    {
+                                        r: 2,
+                                        t: 2
+                                    }
+                                ],
+                                direction: "down",
+                                height: 1000,
                                 width: 8000,
                                 buttons: [
+                                    {
+                                        method: "restyle",
+                                        args: ["visible", [false,true,true,...TrueList_cones]], //using velocity graph. Change to Example
+                                        label: "Example"
+
+                                    },
                                     {
                                         method: "restyle",
                                         args: ["visible", [true,false,false,...FalseList_cones]],
@@ -286,9 +524,44 @@
                                         args: ["visible", [false,true,true,...TrueList_cones]],
                                         label: "Velocity"
                                     },
+                                    {
+                                        method: "restyle",
+                                        args: ["visible", [false,true,true,...TrueList_cones]], //using velocity graph. Change to Concentration
+                                        label: "Concentration"
+                                    },
+                                    {
+                                        method: "restyle",
+                                        args: ["visible", [false,true,true,...TrueList_cones]], //using velocity graph. Change to Arrow Size
+                                        label: "Arrow Size"
+                                    },
+                                    {
+                                        method: "restyle",
+                                        args: ["visible", [false,true,true,...TrueList_cones]], //using velocity graph. Change to Label Size
+                                        label: "Label Size"
+                                    },
+                                    {
+                                        method: "restyle",
+                                        args: ["visible", [false,true,true,...TrueList_cones]], //using velocity graph. Change to Download
+                                        label: "Download"
+                                    },
                                 ],
+
                             },
                             
+                        ],
+                        /* This is for adding the Load Button text beside the drop-down menu */
+
+                        //code by Sourasish
+                        annotations: [
+                            {
+                                text: "Load Button:",
+                                showarrow: false,
+                                x: 0.025,     //dont change this value, if needed do minute changes like 0.1 wise - load button x axis nahole alignment thakbe na
+                                y: 0.939,    //dont change this value, if needed do minute changes like 0.1 wise - Load button y axis nahole alignment thakbe na
+                                xref: "paper",
+                                yref: "paper",
+                                align: "left"
+                            }
                         ],
 
                         //for changing the 2D view
@@ -304,10 +577,11 @@
                             visible: false,
                             showgrid: false,
                         }
+
                     };
                     Plotly.newPlot('network', data, layout);
                 })
         </script>
-
+        </div>
     </body>
 </html>
